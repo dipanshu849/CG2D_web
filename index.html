@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Dev server</title>
+  </head>
+  <body>
+    <header class="header container">
+      <nav class="header__nav">
+        <ul class="header__menu">
+          <li><a class="header__link" href="#about">About</a></li>
+          <li><a class="header__link" href="#featured">Work</a></li>
+          <li><a class="header__link" href="#contact">Contact</a></li>
+          <li class="header__line"></li>
+          <li>
+            <button class="header__sun">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"
+                />
+              </svg>
+            </button>
+          </li>
+          <!-- <li> <a href="#" class="header__contact"></a></li> -->
+        </ul>
+      </nav>
+      <button class="header__bars">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </header>
+    <main>
+      <section class="hero container section80">
+        <h2 class="hero__subtitle">Welcome To</h2>
+        <h1 class="hero__title">
+          <svg
+            width="90"
+            height="32"
+            viewBox="0 0 90 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- filter="url(#filter0_d_1_2)" -->
+            <g>
+              <path
+                d="M14.527 29.16C11.9936 29.16 9.76695 28.68 7.84695 27.72C5.92695 26.7333 4.42029 25.2667 3.32695 23.32C2.26029 21.3733 1.72695 18.96 1.72695 16.08C1.72695 12.1867 2.76695 9.10667 4.84695 6.84C6.92695 4.54667 10.0203 3.4 14.127 3.4C15.567 3.4 16.9936 3.56 18.407 3.88C19.847 4.2 21.1803 4.72 22.407 5.44L20.607 10.48C19.967 10.08 19.167 9.77333 18.207 9.56C17.247 9.32 16.327 9.2 15.447 9.2C13.367 9.2 11.7536 9.84 10.607 11.12C9.48695 12.3733 8.92695 14.0667 8.92695 16.2C8.92695 18.5467 9.56695 20.3333 10.847 21.56C12.1536 22.76 13.8336 23.36 15.887 23.36C17.0336 23.36 18.1136 23.1867 19.127 22.84C20.1403 22.4933 21.0203 22.0667 21.767 21.56L23.847 26.04C22.8603 26.7867 21.6336 27.4933 20.167 28.16C18.7003 28.8267 16.8203 29.16 14.527 29.16ZM39.9995 29.28C37.4928 29.28 35.2528 28.8 33.2795 27.84C31.3328 26.8533 29.7995 25.3867 28.6795 23.44C27.5861 21.4933 27.0395 19.08 27.0395 16.2C27.0395 12.3067 28.1061 9.21333 30.2395 6.92C32.3995 4.6 35.5728 3.44 39.7595 3.44C41.9728 3.44 43.8795 3.73333 45.4795 4.32C47.1061 4.90667 48.4528 5.61333 49.5195 6.44L47.4795 11.08C46.6528 10.5467 45.6395 10.1067 44.4395 9.76C43.2661 9.38667 42.0928 9.2 40.9195 9.2C38.7861 9.2 37.1328 9.85333 35.9595 11.16C34.8128 12.44 34.2395 14.1467 34.2395 16.28C34.2395 17.96 34.5595 19.3333 35.1995 20.4C35.8395 21.44 36.6795 22.2133 37.7195 22.72C38.7595 23.2 39.8661 23.44 41.0395 23.44C41.6528 23.44 42.1861 23.4 42.6395 23.32C43.0928 23.2133 43.4261 23.1067 43.6395 23V19.16H39.3195V14.04H50.4395V25.32C49.4528 26.4933 48.0395 27.4533 46.1995 28.2C44.3595 28.92 42.2928 29.28 39.9995 29.28ZM53.0716 29V26.94L55.9916 24.48C56.6983 23.88 57.2316 23.3733 57.5916 22.96C57.9516 22.5333 58.1916 22.1533 58.3116 21.82C58.445 21.4867 58.5116 21.1667 58.5116 20.86C58.5116 20.1933 58.3116 19.7 57.9116 19.38C57.525 19.0467 56.965 18.88 56.2316 18.88C55.7783 18.88 55.345 18.94 54.9316 19.06C54.5183 19.18 54.1316 19.3533 53.7716 19.58L52.8316 17.12C53.405 16.76 54.0583 16.5 54.7916 16.34C55.5383 16.18 56.2583 16.1 56.9516 16.1C58.1916 16.1 59.1916 16.3067 59.9516 16.72C60.7116 17.12 61.265 17.6533 61.6116 18.32C61.9583 18.9867 62.1316 19.7133 62.1316 20.5C62.1316 21.1933 61.9716 21.88 61.6516 22.56C61.345 23.2267 60.7916 23.9 59.9916 24.58L57.9316 26.34V26.42H62.2316V29H53.0716ZM65.2324 29V4.96C66.4858 4.42667 67.9258 4.04 69.5524 3.8C71.1791 3.53333 72.7658 3.4 74.3124 3.4C78.8724 3.4 82.3391 4.50666 84.7124 6.72C87.0858 8.90667 88.2724 12.1067 88.2724 16.32C88.2724 19.3067 87.6991 21.7333 86.5524 23.6C85.4324 25.4667 83.8591 26.84 81.8324 27.72C79.8058 28.5733 77.4724 29 74.8324 29H65.2324ZM72.1124 23.8H74.4724C76.4991 23.8 78.0858 23.1867 79.2324 21.96C80.4058 20.7333 80.9924 18.8533 80.9924 16.32C80.9924 13.8667 80.4324 12.0267 79.3124 10.8C78.1924 9.54667 76.5658 8.92 74.4324 8.92C74.0591 8.92 73.6724 8.94667 73.2724 9C72.8724 9.02667 72.4858 9.09333 72.1124 9.2V23.8Z"
+                fill="white"
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_d_1_2"
+                x="-2.27305"
+                y="3.4"
+                width="94.5455"
+                height="33.88"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix
+                  in="SourceAlpha"
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  result="hardAlpha"
+                />
+                <feOffset dy="4" />
+                <feGaussianBlur stdDeviation="2" />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+                />
+                <feBlend
+                  mode="normal"
+                  in2="BackgroundImageFix"
+                  result="effect1_dropShadow_1_2"
+                />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="effect1_dropShadow_1_2"
+                  result="shape"
+                />
+              </filter>
+            </defs>
+          </svg>
+        </h1>
+      </section>
+      <section class="hero__bottom container section section100">
+        <p class="hero__description">
+          The <strong>GameDev Cell</strong>, CG2D, is a holistic student
+          organization, which focuses on several aspects of development of games
+          using external software and also in development of game engine.
+        </p>
+        <a href="#" class="hero__btn btn">Reach Out</a>
+        <!-- <p class="hero__description">
+          Our Club involves people from any branch since what you need is a
+          sense of passion and spirit to learn and rest will be handled
+          automatically.
+        </p> -->
+      </section>
+
+      <section class="about-rotation container section100"></section>
+      <section id="about" class="about-display container section100"></section>
+      <section class="about__bottom container section section100">
+        <div class="about__content">
+          <p class="about__description">
+            <strong> Computer Graphics & Game Development</strong>, CG2D Cell is
+            a community for digital creativity and interactive entertainment. We
+            offer workshops, projects, and seminars on 3D modeling, animation,
+            game design, and real-time rendering.
+          </p>
+          <p class="about__description">
+            Our programs help members create stunning visuals and immersive
+            games. Whether you're an experienced developer or a beginner, CG2D
+            provides the resources and support to excel in computer graphics and
+            game development.
+          </p>
+          <!-- <p></p> -->
+          <hr class="about__hr" />
+          <h3 class="about__subtitle">Technologies</h3>
+          <ul class="about__ul">
+            <li class="about__list">Unity</li>
+            <li class="about__list">Godot</li>
+            <li class="about__list">VR</li>
+          </ul>
+        </div>
+      </section>
+      <!-- <section class="featured-glitch container section100"></section> -->
+      <section class="featured-start container section100"></section>
+      <section class="featured-middle container section100"></section>
+      <section class="featured-display container section100"></section>
+      <section class="featured container section">
+        <div class="featured__wrapper">
+          <h2 class="featured__title">Slime Back In Time</h2>
+          <a
+            href="https://swarnarup-bhunia.itch.io/slime-back-in-time"
+            class="featured__link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </a>
+        </div>
+        <p class="featured__description">
+          A charming puzzle platformer where you play as a time-traveling jelly
+          collecting ancient artifacts. The game features evolving landscapes
+          that reveal hidden paths and a unique mechanic where players can use
+          their previous "death points" as platforms. With its low-poly
+          cartoonish visuals and cozy atmosphere, the game turns failure into
+          opportunity while telling a story of digital archaeology.
+        </p>
+        <div class="featured__info-container">
+          <div>
+            <h3 class="featured__label">Tech Stack</h3>
+            <ul class="featured__tech-stack">
+              <li class="featured__info">Unity</li>
+              <li class="featured__info">C#</li>
+              <li class="featured__info">Blender</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="featured__label">Project Type</h3>
+            <p class="featured__info">3D Isometric Puzzle Platformer Game</p>
+          </div>
+          <div>
+            <h3 class="featured__label">Timeline</h3>
+            <p class="featured__info">December 2024</p>
+          </div>
+        </div>
+        <div class="featured__img-container-main">
+          <section class="featured__img-wrapper-container">
+            <div class="featured__img-wrapper">
+              <img src="./featuredImages/start.png" alt="Start screen" />
+            </div>
+            <div class="featured__img-wrapper">
+              <img src="./featuredImages/tutorial.png" alt="Tutorial screen" />
+            </div>
+            <div class="featured__img-wrapper">
+              <img
+                src="./featuredImages/level.png"
+                alt="Level selection screen"
+              />
+            </div>
+            <div class="featured__img-wrapper">
+              <img
+                src="./featuredImages/insideLevel.png"
+                alt="Gameplay screen"
+              />
+            </div>
+          </section>
+        </div>
+      </section>
+      <section class="team-start container section100"></section>
+      <section class="team pixelify-sans-regular container section100">
+        <h2 class="team__title">Team</h2>
+        <p class="team__description">Meet Our Team</p>
+        <div class="team__23 container" style="--items: 6">
+          <!-- Krish -->
+          <section class="card left" style="--n: 1">
+            <img
+              class="card__back-img"
+              src="/teamImages/dead forest.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Krish</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Dipanshu -->
+          <section class="card left" style="--n: 2">
+            <img
+              class="card__back-img"
+              src="/teamImages/throne room.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/slashing_skeleton2.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Dipanshu</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Satvik -->
+          <section class="card left" style="--n: 3">
+            <img
+              class="card__back-img"
+              src="/teamImages/castle.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img eighteenStep"
+                  src="/teamImages/idle_skeleton3.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Satvik</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Shashi -->
+          <section class="card left" style="--n: 4">
+            <img
+              class="card__back-img"
+              src="/teamImages/terrace.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Shashi</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Rahul -->
+          <section class="card left" style="--n: 5">
+            <img
+              class="card__back-img"
+              src="/teamImages/dead forest.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img eighteenStep"
+                  src="/teamImages/idle_skeleton3.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Rahul</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Aditya -->
+          <section class="card left" style="--n: 6">
+            <img
+              class="card__back-img"
+              src="/teamImages/castle.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Dipanshu</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="team__23 container" style="--items: 6">
+          <!-- Krish -->
+          <section class="card right" style="--n: 1">
+            <img
+              class="card__back-img"
+              src="/teamImages/dead forest.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Krish</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Dipanshu -->
+          <section class="card right" style="--n: 2">
+            <img
+              class="card__back-img"
+              src="/teamImages/throne room.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/slashing_skeleton2.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Dipanshu</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Satvik -->
+          <section class="card right" style="--n: 3">
+            <img
+              class="card__back-img"
+              src="/teamImages/castle.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img eighteenStep"
+                  src="/teamImages/idle_skeleton3.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Satvik</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Shashi -->
+          <section class="card right" style="--n: 4">
+            <img
+              class="card__back-img"
+              src="/teamImages/terrace.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Shashi</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Rahul -->
+          <section class="card right" style="--n: 5">
+            <img
+              class="card__back-img"
+              src="/teamImages/dead forest.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img eighteenStep"
+                  src="/teamImages/idle_skeleton3.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Rahul</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Aditya -->
+          <section class="card right" style="--n: 6">
+            <img
+              class="card__back-img"
+              src="/teamImages/castle.png"
+              alt="Background theme"
+            />
+            <h2 class="card__title">Core</h2>
+            <div class="card__middle">
+              <div class="card__img-container">
+                <img
+                  class="card__img twelveStep"
+                  src="/teamImages/spritesheet.png"
+                  alt="Team member avatar"
+                />
+              </div>
+              <div class="card__stats-container">
+                <h2 class="name">Dipanshu</h2>
+                <!-- Professional Stats -->
+                <div class="progress__container">
+                  <label for="experience">Year </label>
+                  <!-- <progress id="experience" value=".85">85%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <!-- <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div> -->
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="experience">creativity</label>
+                  <!-- <progress id="experience" value=".45">45%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <div class="progress__container">
+                  <label for="projects">Friendly</label>
+                  <!-- <progress id="projects" value=".35">35%</progress> -->
+                  <section class="progress__bar">
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="border__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                    <div class="meter__block"></div>
+                  </section>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-tags">
+                  <span class="skill-tag">Frontend</span>
+                  <span class="skill-tag">UI/UX</span>
+                </div>
+
+                <!-- Social Links -->
+                <!-- <div class="social-links">
+                  <a href="#" class="social-btn insta">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a href="#" class="social-btn facebook">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
+                      ></path>
+                    </svg>
+                </div> -->
+
+                <!-- Quick Actions -->
+                <div class="action-buttons">
+                  <button class="view-projects">Projects</button>
+                  <button class="contact">Contact</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section class="team-end container section100"></section>
+      <!-- <section class="team- container section100"></section> -->
+      <!-- <section></section> -->
+      <!-- <section></section> -->
+    </main>
+    <!-- <footer></footer> -->
+
+    <script id="vertexshader" type="vertex">
+            vec3 mod289(vec3 x)
+        {
+          return x - floor(x * (1.0 / 289.0)) * 289.0;
+        }
+
+        vec4 mod289(vec4 x)
+        {
+          return x - floor(x * (1.0 / 289.0)) * 289.0;
+        }
+
+        vec4 permute(vec4 x)
+        {
+          return mod289(((x*34.0)+10.0)*x);
+        }
+
+        vec4 taylorInvSqrt(vec4 r)
+        {
+          return 1.79284291400159 - 0.85373472095314 * r;
+        }
+
+        vec3 fade(vec3 t) {
+          return t*t*t*(t*(t*6.0-15.0)+10.0);
+        }
+
+        float pnoise(vec3 P, vec3 rep)
+        {
+          vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
+          vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period
+          Pi0 = mod289(Pi0);
+          Pi1 = mod289(Pi1);
+          vec3 Pf0 = fract(P); // Fractional part for interpolation
+          vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
+          vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
+          vec4 iy = vec4(Pi0.yy, Pi1.yy);
+          vec4 iz0 = Pi0.zzzz;
+          vec4 iz1 = Pi1.zzzz;
+
+          vec4 ixy = permute(permute(ix) + iy);
+          vec4 ixy0 = permute(ixy + iz0);
+          vec4 ixy1 = permute(ixy + iz1);
+
+          vec4 gx0 = ixy0 * (1.0 / 7.0);
+          vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
+          gx0 = fract(gx0);
+          vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
+          vec4 sz0 = step(gz0, vec4(0.0));
+          gx0 -= sz0 * (step(0.0, gx0) - 0.5);
+          gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+
+          vec4 gx1 = ixy1 * (1.0 / 7.0);
+          vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
+          gx1 = fract(gx1);
+          vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
+          vec4 sz1 = step(gz1, vec4(0.0));
+          gx1 -= sz1 * (step(0.0, gx1) - 0.5);
+          gy1 -= sz1 * (step(0.0, gy1) - 0.5);
+
+          vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
+          vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
+          vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
+          vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
+          vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
+          vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
+          vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
+          vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
+
+          vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+          g000 *= norm0.x;
+          g010 *= norm0.y;
+          g100 *= norm0.z;
+          g110 *= norm0.w;
+          vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+          g001 *= norm1.x;
+          g011 *= norm1.y;
+          g101 *= norm1.z;
+          g111 *= norm1.w;
+
+          float n000 = dot(g000, Pf0);
+          float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+          float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+          float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+          float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+          float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+          float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
+          float n111 = dot(g111, Pf1);
+
+          vec3 fade_xyz = fade(Pf0);
+          vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
+          vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
+          float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
+          return 2.2 * n_xyz;
+        }
+
+        uniform float u_time;
+
+      void main() {
+      float noise = 5. * pnoise(position + u_time, vec3(10.));
+
+      float displacement = noise / 10.;
+      vec3 newPosition = position + normal * displacement;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+      }
+    </script>
+
+    <script id="fragmentshader" type="fragment">
+      uniform vec2 u_resolution;
+      uniform float u_opacity;
+      void main() {
+        vec2 st = gl_FragCoord.xy / u_resolution;
+      gl_FragColor = vec4(vec3(st.x, st.y, 1.0), u_opacity);
+      }
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
