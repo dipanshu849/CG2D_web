@@ -28,7 +28,7 @@
 
 }  */
 
-.btn {
+/* .btn {
   display: inline-block;
   font-weight: 600;
   text-decoration: none;
@@ -46,6 +46,100 @@
   transform: translateY(-3px);
   box-shadow: 0 14px 28px rgba(225, 29, 72, 0.25),
     0 10px 10px rgba(225, 29, 72, 0.22), 0 0 120px -10px var(--clr-rose);
+} */
+
+.btn {
+  display: inline-block;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  /* background-color: var(--clr-rose); */
+  color: var(--clr-light);
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  /* border: 2px solid var(--clr-rose); */
+}
+
+.btn span:nth-of-type(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(to right, var(--clr-dark), var(--clr-rose));
+  animation: toRight 2s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes toRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.btn span:nth-of-type(2) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--clr-dark), var(--clr-rose));
+  animation: toBottom 2s linear infinite;
+  animation-delay: 1.5s;
+}
+
+@keyframes toBottom {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.btn span:nth-of-type(3) {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(to left, var(--clr-dark), var(--clr-rose));
+  animation: toLeft 2s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes toLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.btn span:nth-of-type(4) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  background: linear-gradient(to top, var(--clr-dark), var(--clr-rose));
+  animation: toTop 2s linear infinite;
+  animation-delay: 2s;
+}
+
+@keyframes toTop {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
 }
 
 .container {
