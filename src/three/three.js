@@ -22,7 +22,6 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 import spline from "./spline";
-import { color } from "three/tsl";
 
 let camera;
 let cameraHolder;
@@ -36,7 +35,7 @@ let textAbout, strokeGroup;
 let lineMaterialAbout, strokeMeshAbout, totalDistanceLetterAbout;
 let dancingSphere;
 
-let textFeatured;
+let textFeatured, textProject;
 const uniforms = {
   u_resolution: {
     type: "v2",
@@ -108,7 +107,7 @@ const Three = () => {
 
   // ADD STARS
   Array(200).fill().forEach(addStars);
-
+  // addHighLightningStars();
   // ADD TEXT
   gsapScroll();
   addPointModel();
@@ -116,6 +115,7 @@ const Three = () => {
   addFeaturedText();
   addDancingSphere();
   // addTeamText();
+  addProjectText();
 
   //   AUTO RENDER
   const clock = new THREE.Clock();
@@ -271,6 +271,14 @@ const addStars = () => {
   scene.add(closeStar);
 };
 
+// const addHighLightningStars = () => {
+//   const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+//   const closeGeometry = new THREE.SphereGeometry(0.25, 6, 2);
+//   const closeStar = new THREE.Mesh(closeGeometry, material);
+//   closeStar.position.set(3, 2, 0.5);
+//   scene.add(closeStar);
+// };
+
 const addAboutText = () => {
   const loader = new FontLoader();
   // promisify font loading
@@ -397,7 +405,7 @@ const addFeaturedText = () => {
     geometry.center();
     const mat = new THREE.MeshPhysicalMaterial({
       roughness: 0.5,
-      transmission: 1,
+      transmission: 0.98,
       transparent: true,
       thickness: 1,
       opacity: 0,
@@ -406,6 +414,47 @@ const addFeaturedText = () => {
     textFeatured.rotation.y = Math.PI;
     textFeatured.rotation.x = Math.PI / 2;
     scene.add(textFeatured);
+  }
+  doit();
+};
+
+const addProjectText = () => {
+  const loader = new FontLoader();
+  // promisify font loading
+  function loadFont(url) {
+    return new Promise((resolve, reject) => {
+      loader.load(url, resolve, undefined, reject);
+    });
+  }
+  async function doit() {
+    const font = await loadFont("/Sarala_Regular.json");
+    // loader.load("/Sarala_Regular.json", (font) => {
+    const geometry = new TextGeometry("Projects", {
+      font: font,
+      size: 1.4,
+
+      depth: 0.1,
+      curveSegments: 6,
+      bevelEnabled: true,
+      bevelThickness: 0.05,
+      bevelSize: 0.01,
+      bevelOffset: 0,
+      bevelSegments: 2,
+    });
+
+    geometry.center();
+    const mat = new THREE.MeshPhysicalMaterial({
+      roughness: 0.5,
+      transmission: 0.8,
+      transparent: true,
+      thickness: 1,
+      opacity: 0,
+    });
+    textProject = new THREE.Mesh(geometry, mat);
+    textProject.rotation.y = Math.PI;
+    textProject.rotation.x = Math.PI / 2;
+    textProject.visible = false;
+    scene.add(textProject);
   }
   doit();
 };
@@ -456,6 +505,24 @@ const addFeaturedText = () => {
 
 const gsapScroll = () => {
   gsap.registerPlugin(ScrollTrigger);
+
+  // REMOVE SCROLL DOWN ARROW
+  let arrowItems = document.querySelectorAll(".invisible");
+  arrowItems.forEach((item) => {
+    gsap.fromTo(
+      item,
+      { opacity: 1 },
+      {
+        scrollTrigger: {
+          trigger: ".header",
+          start: "top top",
+          end: "80% top",
+          scrub: 0,
+        },
+        opacity: 0,
+      }
+    );
+  });
 
   gsap.fromTo(
     camera.position,
@@ -610,8 +677,10 @@ const gsapScroll = () => {
     {},
     {
       scrollTrigger: {
-        trigger: ".featured-start",
-        start: "top top",
+        trigger: ".about__bottom",
+        // trigger: ".featured-start",
+        start: "10% top",
+        // endTrigger: ".featured-start",
         end: "bottom top",
         scrub: 0,
         onUpdate: (progress, direction, isActive) => {
@@ -682,7 +751,7 @@ const gsapScroll = () => {
     percent: 1,
   });
 
-  // FADE-IN FEATURED TEXT AND FADE-OUT ABOUT TEXT DURING EXPLOSING [NOTE: ITS NOT IMPORTANT TO ANIMATE, ]
+  // FADE-IN FEATURED TEXT AND FADE-OUT {ABOUT TEXT DURING EXPLOSING [NOTE: ITS NOT IMPORTANT TO ANIMATE]}, ]
   gsap.to(
     {},
     {
@@ -723,8 +792,9 @@ const gsapScroll = () => {
       scrollTrigger: {
         trigger: ".featured-display",
         start: "top top",
-        end: "50% top",
-        scrub: 1,
+        endTrigger: ".featured",
+        end: "80% top",
+        scrub: 0,
         onUpdate: (self) => {
           camera.rotation.x =
             -Math.PI * 1.5 * self.progress -
@@ -751,10 +821,7 @@ const gsapScroll = () => {
         trigger: ".featured-display",
         start: "top top",
         end: "50% top",
-        scrub: 1,
-        onUpdate: () => {
-          console.log(uniforms.u_opacity.value);
-        },
+        scrub: 0,
       },
       value: 0.01,
     }
@@ -781,7 +848,7 @@ const gsapScroll = () => {
     }
   );
 
-  // ADD PIXELATED EFFECT WITH SETpIXELrATIO
+  // ADD PIXELATED EFFECT WITH SETpIXELrATIO - REMOVE 'FEATURED TEXT' - ADD 'PROJECTS TEXT' - REMOVE DANCING SPHERE
   gsap.to(
     {},
     {
@@ -789,27 +856,75 @@ const gsapScroll = () => {
         trigger: ".team-start",
         scrub: 0,
         start: "top top",
-        endTrigger: ".team-end",
+        endTrigger: ".team",
         end: "bottom top",
         onEnter: () => {
           effectComposer.addPass(pixelatedPass);
-          console.log("ADDED");
+          if (textProject) textProject.visible = true;
         },
         onLeaveBack: () => {
           effectComposer.removePass(pixelatedPass);
+          if (textProject) textProject.visible = false;
         },
-        onLeave: () => {
-          effectComposer.removePass(pixelatedPass);
-        },
-        onEnterBack: () => {
-          effectComposer.addPass(pixelatedPass);
-        },
-        onUpdate: ({ progress, direction, isActive }) => {
+
+        onUpdate: (self) => {
           // if (progress >= 0.8) glitchPass.goWild = true;
           // else glitchPass.goWild = false;
           if (pixelatedPass) {
-            console.log("UPDATED");
-            pixelatedPass.setPixelSize(progress ** 2 * 200 + 1);
+            pixelatedPass.setPixelSize(self.progress ** 2 * 200 + 1);
+          }
+          if (textFeatured) {
+            textFeatured.material.opacity = 1 - self.progress;
+          }
+          if (textProject) {
+            textProject.material.opacity = self.progress ** 2;
+          }
+          uniforms.u_opacity.value = 0.01 * (1 - self.progress) + 0.0;
+        },
+      },
+    }
+  );
+
+  gsap.fromTo(
+    camera.position,
+    {
+      x: 0,
+      y: 60,
+      z: 0,
+    },
+    {
+      scrollTrigger: {
+        trigger: ".team-end",
+        scrub: 0,
+        start: "top top",
+        end: "bottom top",
+      },
+      x: 0,
+      y: 15,
+      z: 0,
+    }
+  );
+
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".team-end",
+        scrub: 0,
+        end: "bottom top",
+        onLeave: () => {
+          effectComposer.removePass(pixelatedPass);
+          if (textFeatured) textFeatured.visible = false;
+        },
+        onEnterBack: () => {
+          effectComposer.addPass(pixelatedPass);
+          if (textFeatured) textFeatured.visible = true;
+        },
+        onUpdate: (self) => {
+          // if (progress >= 0.8) glitchPass.goWild = true;
+          // else glitchPass.goWild = false;
+          if (pixelatedPass) {
+            pixelatedPass.setPixelSize(202 - self.progress * 200 + 1);
           }
         },
       },

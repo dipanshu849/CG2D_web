@@ -3,6 +3,7 @@ import "../styles/style.css";
 import "../styles/components/header.css";
 import "../styles/components/hero.css";
 import "../styles/components/hero-description.css";
+import "../styles/components/hero-downArrow.css";
 import "../styles/components/about-description.css";
 import "../styles/components/featured.css";
 import "../styles/components/team.css";
@@ -10,6 +11,6 @@ import "../styles/utils/team__card.css";
 import "../styles/utils.css";
 
 import Three from "./three/three";
-import slider from "./components/imageSlider";
+// import slider from "./components/imageSlider";
 Three();
 // slider();
