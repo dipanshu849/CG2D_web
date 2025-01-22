@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
+import { DRACOLoader } from "three/examples/jsm/Addons.js";
 import { FontLoader } from "three/examples/jsm/Addons.js";
 import { TextGeometry } from "three/examples/jsm/Addons.js";
-import { TTFLoader } from "three/examples/jsm/Addons.js";
-import { Color } from "three";
 
 import { RenderPass } from "three/examples/jsm/Addons.js";
 import { EffectComposer } from "three/examples/jsm/Addons.js";
@@ -14,13 +13,10 @@ import { LineMaterial } from "three/examples/jsm/Addons.js";
 import { LineGeometry } from "three/examples/jsm/Addons.js";
 import { Line2 } from "three/examples/jsm/Addons.js";
 
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
-import { LuminosityShader } from "three/addons/shaders/LuminosityShader.js";
 import { GlitchPass } from "three/examples/jsm/Addons.js";
 
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-
 import spline from "./spline";
 
 let camera;
@@ -35,7 +31,16 @@ let textAbout, strokeGroup;
 let lineMaterialAbout, strokeMeshAbout, totalDistanceLetterAbout;
 let dancingSphere;
 
+let mixer, picnicSpot;
+
 let textFeatured, textProject;
+
+const dLoader = new DRACOLoader();
+dLoader.setDecoderPath(
+  "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
+);
+dLoader.setDecoderConfig({ type: "js" });
+
 const uniforms = {
   u_resolution: {
     type: "v2",
@@ -82,7 +87,7 @@ const Three = () => {
   effectComposer = new EffectComposer(renderer);
   const rendererPass = new RenderPass(scene, camera);
   glitchPass = new GlitchPass();
-  pixelatedPass = new RenderPixelatedPass(10, scene, camera);
+  pixelatedPass = new RenderPixelatedPass(1, scene, camera);
   // const outputPass = new OutputPass();
   effectComposer.addPass(rendererPass);
   // effectComposer.addPass(glitchPass);
@@ -111,6 +116,7 @@ const Three = () => {
   // ADD TEXT
   gsapScroll();
   addPointModel();
+  addPicnicSpot();
   addAboutText();
   addFeaturedText();
   addDancingSphere();
@@ -122,13 +128,22 @@ const Three = () => {
   function animate() {
     uniforms.u_time.value = clock.getElapsedTime();
     // renderer.render(scene, camera);
+    if (mixer) mixer.update(0.02);
     effectComposer.render();
   }
-  window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("resize", onWindowResize, true);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    // animate();
+    // const aspectRatio = window.innerWidth / window.innerHeight;
+    // camera.left = -aspectRatio;
+    // camera.right = aspectRatio;
+    // camera.updateProjectionMatrix();
+
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
     animate();
   }
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -137,7 +152,8 @@ const Three = () => {
 
 const addPointModel = () => {
   const loader = new GLTFLoader();
-  loader.load("/space_station_3.glb", (gltf) => {
+  loader.setDRACOLoader(dLoader);
+  loader.load("/models/space_station_c.glb", (gltf) => {
     object = gltf.scene;
     // GETTING POSITION
     const positions = combineBuffer(object, "position");
@@ -233,6 +249,28 @@ const addPointModel = () => {
       mesh.geometry.attributes.finalPosition.array
     );
   }
+};
+
+const addPicnicSpot = () => {
+  const newLoader = new GLTFLoader();
+  newLoader.setDRACOLoader(dLoader);
+
+  newLoader.load(
+    "/models/space_picnic_c.glb",
+    (gltf) => {
+      // object.position.set(0, 0, 0);
+      picnicSpot = gltf.scene;
+      picnicSpot.position.set(140, 0, -40);
+      scene.add(picnicSpot);
+      picnicSpot.visible = false;
+
+      // scene.add(gltf.scene);
+      mixer = new THREE.AnimationMixer(picnicSpot);
+      mixer.clipAction(gltf.animations[0]).play();
+    },
+    undefined,
+    onerror
+  );
 };
 
 const addDancingSphere = () => {
@@ -458,50 +496,6 @@ const addProjectText = () => {
   }
   doit();
 };
-
-// const addTeamText = () => {
-//   const loader = new FontLoader();
-//   // promisify font loading
-//   function loadFont(url) {
-//     return new Promise((resolve, reject) => {
-//       loader.load(url, resolve, undefined, reject);
-//     });
-//   }
-//   async function doit() {
-//     const font = await loadFont("/Pixel_Regular.json");
-//     // loader.load("/Sarala_Regular.json", (font) => {
-//     const geometry = new TextGeometry("Team", {
-//       font: font,
-//       size: 1.4,
-
-//       depth: 0.1,
-//       curveSegments: 6,
-//       // bevelEnabled: true,
-//       bevelThickness: 0.05,
-//       bevelSize: 0.01,
-//       bevelOffset: 0,
-//       bevelSegments: 2,
-//     });
-
-//     geometry.center();
-//     const mat = new THREE.MeshPhysicalMaterial({
-//       roughness: 0.5,
-//       transmission: 1,
-//       transparent: true,
-//       thickness: 1,
-//       opacity: 1,
-//     });
-//     // const mat = new THREE.MeshBasicMaterial({
-//     //   color: "#ffffff",
-//     // });
-//     textFeatured = new THREE.Mesh(geometry, mat);
-//     textFeatured.position.y = 50;
-//     textFeatured.rotation.y = Math.PI;
-//     textFeatured.rotation.x = Math.PI / 2;
-//     scene.add(textFeatured);
-//   }
-//   doit();
-// };
 
 const gsapScroll = () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -885,6 +879,7 @@ const gsapScroll = () => {
     }
   );
 
+  // GET CAMERA TO Y: 15 FROM 60
   gsap.fromTo(
     camera.position,
     {
@@ -905,6 +900,7 @@ const gsapScroll = () => {
     }
   );
 
+  // REMOVE PIXELATED EFFECT
   gsap.to(
     {},
     {
@@ -915,10 +911,17 @@ const gsapScroll = () => {
         onLeave: () => {
           effectComposer.removePass(pixelatedPass);
           if (textFeatured) textFeatured.visible = false;
+          if (picnicSpot) {
+            // picnicSpot.name = "picnic";
+            picnicSpot.visible = true;
+          }
         },
         onEnterBack: () => {
           effectComposer.addPass(pixelatedPass);
           if (textFeatured) textFeatured.visible = true;
+          if (picnicSpot) {
+            picnicSpot.visible = false;
+          }
         },
         onUpdate: (self) => {
           // if (progress >= 0.8) glitchPass.goWild = true;

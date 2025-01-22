@@ -33,7 +33,7 @@
   border-top: 2px solid var(--clr-rose);
   left: 50%;
   /* transform: ; */
-  animation: slowlyDown 2s linear 1s infinite;
+  animation: slowlyDown 2s linear infinite;
 }
 
 @keyframes slowlyDown {
@@ -43,7 +43,7 @@
     opacity: 0;
   }
   80% {
-    transform: translateY(0px) translate(-50%) rotate(135deg) scale(1.2);
+    transform: translateY(-1px) translate(-50%) rotate(135deg) scale(1.2);
     opacity: 1;
   }
 }
@@ -74,6 +74,12 @@
 @media (min-width: 1024px) {
   .scroll__title {
     font-size: var(--size-sm);
+  }
+
+  .arrow__down::after {
+    width: 12px;
+    border-right: 2px solid var(--clr-rose);
+    border-top: 2px solid var(--clr-rose);
   }
 }
 
