@@ -61,16 +61,16 @@
 
     border-image: conic-gradient(
         from calc(var(--rotation) * 1deg),
-        var(--clr-rose),
-        var(--clr-slate800),
-        var(--clr-indigo),
-        var(--clr-slate600),
-        var(--clr-light),
-        var(--clr-slate800)
+        /* var(--clr-rose), */ rgba(225, 29, 72, 0.6),
+        /* var(--clr-slate800), */ rgba(30, 41, 59, 0.8),
+        /* var(--clr-indigo), */ rgba(79, 70, 229, 0.8),
+        /* var(--clr-slate600), */ rgba(71, 85, 105, 0.8),
+        /* var(--clr-light), */ rgba(241, 245, 249, 0.5),
+        /* var(--clr-slate800) */ rgba(30, 41, 59, 0.8)
       )
       1;
     filter: blur(0.5em);
-    animation: rotate-cone 10s infinite;
+    animation: rotate-cone 15s infinite;
   }
 
   .header__link {

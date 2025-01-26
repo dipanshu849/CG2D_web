@@ -18,6 +18,7 @@ import { GlitchPass } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import spline from "./spline";
+import { mix, shiftLeft } from "three/tsl";
 
 let camera;
 let cameraHolder;
@@ -31,10 +32,9 @@ let textAbout, strokeGroup;
 let lineMaterialAbout, strokeMeshAbout, totalDistanceLetterAbout;
 let dancingSphere;
 
-let mixer, picnicSpot;
+let mixer, dancer;
 
 let textFeatured, textProject;
-
 const dLoader = new DRACOLoader();
 dLoader.setDecoderPath(
   "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
@@ -54,7 +54,7 @@ let glitchPass, effectComposer, pixelatedPass;
 const Three = () => {
   scene = new THREE.Scene();
   // scene.fog = new THREE.Fog(0x000000, 1, 1000);
-  //   CAMERA
+  // CAMERA
   camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -78,16 +78,18 @@ const Three = () => {
   //   RENDERER
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // console.log("PIXEL RATIO ", window.devicePixelRatio);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x000000);
   document.body.appendChild(renderer.domElement);
 
   // PASSES (AKA FILTERS)
   effectComposer = new EffectComposer(renderer);
   const rendererPass = new RenderPass(scene, camera);
   glitchPass = new GlitchPass();
-  pixelatedPass = new RenderPixelatedPass(1, scene, camera);
+  pixelatedPass = new RenderPixelatedPass(
+    window.devicePixelRatio,
+    scene,
+    camera
+  );
   // const outputPass = new OutputPass();
   effectComposer.addPass(rendererPass);
   // effectComposer.addPass(glitchPass);
@@ -112,41 +114,37 @@ const Three = () => {
 
   // ADD STARS
   Array(200).fill().forEach(addStars);
-  // addHighLightningStars();
-  // ADD TEXT
+
+  // START GSAP
   gsapScroll();
+
+  // ADD MODELS
   addPointModel();
-  addPicnicSpot();
+  addDancingSphere();
+  addDomModel();
+
+  // ADD TEXT
   addAboutText();
   addFeaturedText();
-  addDancingSphere();
-  // addTeamText();
   addProjectText();
 
   //   AUTO RENDER
+  // window.scrollTo({ top: 0, behavior: "smooth" }); NOT WORKING!!!
   const clock = new THREE.Clock();
   function animate() {
     uniforms.u_time.value = clock.getElapsedTime();
-    // renderer.render(scene, camera);
-    if (mixer) mixer.update(0.02);
     effectComposer.render();
+    if (mixer) mixer.update(0.02);
   }
   window.addEventListener("resize", onWindowResize, true);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // animate();
-    // const aspectRatio = window.innerWidth / window.innerHeight;
-    // camera.left = -aspectRatio;
-    // camera.right = aspectRatio;
-    // camera.updateProjectionMatrix();
-
-    // renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
+    effectComposer.setSize(window.innerWidth, window.innerHeight);
     animate();
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
   renderer.setAnimationLoop(animate);
 };
 
@@ -251,28 +249,6 @@ const addPointModel = () => {
   }
 };
 
-const addPicnicSpot = () => {
-  const newLoader = new GLTFLoader();
-  newLoader.setDRACOLoader(dLoader);
-
-  newLoader.load(
-    "/models/space_picnic_c.glb",
-    (gltf) => {
-      // object.position.set(0, 0, 0);
-      picnicSpot = gltf.scene;
-      picnicSpot.position.set(140, 0, -40);
-      scene.add(picnicSpot);
-      picnicSpot.visible = false;
-
-      // scene.add(gltf.scene);
-      mixer = new THREE.AnimationMixer(picnicSpot);
-      mixer.clipAction(gltf.animations[0]).play();
-    },
-    undefined,
-    onerror
-  );
-};
-
 const addDancingSphere = () => {
   const mat = new THREE.ShaderMaterial({
     // opacity: 1,
@@ -309,13 +285,21 @@ const addStars = () => {
   scene.add(closeStar);
 };
 
-// const addHighLightningStars = () => {
-//   const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-//   const closeGeometry = new THREE.SphereGeometry(0.25, 6, 2);
-//   const closeStar = new THREE.Mesh(closeGeometry, material);
-//   closeStar.position.set(3, 2, 0.5);
-//   scene.add(closeStar);
-// };
+const addDomModel = () => {
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dLoader);
+  loader.load("/models/space_dance_c.glb", (gltf) => {
+    dancer = gltf.scene;
+    scene.add(dancer);
+    dancer.scale.x = dancer.scale.y = dancer.scale.z = 2;
+    dancer.rotation.x = -Math.PI / 2;
+    dancer.rotation.z = Math.PI;
+    dancer.position.y = 6;
+    dancer.visible = false;
+    mixer = new THREE.AnimationMixer(dancer);
+    mixer.clipAction(gltf.animations[0]).play();
+  });
+};
 
 const addAboutText = () => {
   const loader = new FontLoader();
@@ -774,7 +758,7 @@ const gsapScroll = () => {
     }
   );
 
-  // MOVE TO Y-AXIS (LOOKAT 0) AND START PERLIN NOISE
+  // MOVE TO Y-AXIS (LOOKAT 0)
   gsap.fromTo(
     camera.position,
     {
@@ -816,6 +800,12 @@ const gsapScroll = () => {
         start: "top top",
         end: "50% top",
         scrub: 0,
+        // onEnter: () => {
+        //   effectComposer.addPass(pixelatedPass);
+        // },
+        // onLeaveBack: () => {
+        //   effectComposer.removePass(pixelatedPass);
+        // },
       },
       value: 0.01,
     }
@@ -865,7 +855,9 @@ const gsapScroll = () => {
           // if (progress >= 0.8) glitchPass.goWild = true;
           // else glitchPass.goWild = false;
           if (pixelatedPass) {
-            pixelatedPass.setPixelSize(self.progress ** 2 * 200 + 1);
+            pixelatedPass.setPixelSize(
+              self.progress ** 2 * 200 + window.devicePixelRatio
+            );
           }
           if (textFeatured) {
             textFeatured.material.opacity = 1 - self.progress;
@@ -907,21 +899,21 @@ const gsapScroll = () => {
       scrollTrigger: {
         trigger: ".team-end",
         scrub: 0,
-        end: "bottom top",
+        end: "80% top",
         onLeave: () => {
           effectComposer.removePass(pixelatedPass);
           if (textFeatured) textFeatured.visible = false;
-          if (picnicSpot) {
-            // picnicSpot.name = "picnic";
-            picnicSpot.visible = true;
-          }
+          // if (picnicSpot) {
+          //   // picnicSpot.name = "picnic";
+          //   picnicSpot.visible = true;
+          // }
         },
         onEnterBack: () => {
           effectComposer.addPass(pixelatedPass);
           if (textFeatured) textFeatured.visible = true;
-          if (picnicSpot) {
-            picnicSpot.visible = false;
-          }
+          // if (picnicSpot) {
+          //   picnicSpot.visible = false;
+          // }
         },
         onUpdate: (self) => {
           // if (progress >= 0.8) glitchPass.goWild = true;
@@ -933,6 +925,68 @@ const gsapScroll = () => {
       },
     }
   );
+
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".model__container",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0,
+        onEnter: () => {
+          if (dancer) dancer.visible = true;
+        },
+        onEnterBack: () => {
+          if (dancer) dancer.visible = true;
+        },
+        onLeave: () => {
+          if (dancer) dancer.visible = false;
+        },
+        onLeaveBack: () => {
+          if (dancer) dancer.visible = false;
+        },
+        onUpdate: (self) => {
+          const container = document.querySelector(".model__container");
+          let heightFromTop = container.getBoundingClientRect().top;
+          if (dancer) {
+            dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
+          }
+          console.log(self.progress, ":", heightFromTop);
+        },
+      },
+    }
+  );
+
+  // MOVE TOWARDS NEW MODEL
+  // gsap.fromTo(
+  //   camera.position,
+  //   {
+  //     x: 0,
+  //     y: 15,
+  //     z: 0,
+  //   },
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".project-start",
+  //       start: "top top",
+  //       // endTrigger: ".featured",
+  //       end: "bottom top",
+  //       scrub: 0,
+  //       onUpdate: (self) => {
+  //         camera.rotation.x =
+  //           Math.PI * 0.22 * self.progress -
+  //           (1 - self.progress) * (Math.PI * 1.5);
+  //         // camera.rotation.y = y * self.progress - (1 - self.progress) * Math.PI;
+  //         // uniforms.u_opacity.value = (self.progress) ** 4;
+  //         console.log(self.progress);
+  //       },
+  //     },
+  //     x: 40,
+  //     y: 2,
+  //     z: -42,
+  //   }
+  // );
 
   // START THE GLITCHING WARNING: IT MAY HARM SOME PEOPLE SO GIVE WARNING
   // gsap.to(effectComposer, {

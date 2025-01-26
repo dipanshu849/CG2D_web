@@ -179,9 +179,16 @@
     margin-top: 2rem;
     /* border: 2px solid green; */
   }
+
+  .featured__img-container-main {
+    width: 80%;
+    margin: 0 auto;
+  }
 }
 
 /* 2xl */
-/* @media (min-width: 1536px) {
-
-}  */
+@media (min-width: 1536px) {
+  .featured__img-container-main {
+    width: 70%;
+  }
+}
