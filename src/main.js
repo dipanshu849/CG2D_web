@@ -10,6 +10,8 @@ import "../styles/components/team.css";
 import "../styles/utils/team__card.css";
 import "../styles/components/project.css";
 import "../styles/components/achievements.css";
+import "../styles/components/conclusion/conclusion.css";
+import "../styles/components/conclusion/sunSet.css";
 import "../styles/utils.css";
 
 import "./vanilla-tilt.js";

@@ -8,17 +8,14 @@ import { RenderPass } from "three/examples/jsm/Addons.js";
 import { EffectComposer } from "three/examples/jsm/Addons.js";
 import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
 import { RenderPixelatedPass } from "three/examples/jsm/Addons.js";
+import { GlitchPass } from "three/examples/jsm/Addons.js";
 
 import { LineMaterial } from "three/examples/jsm/Addons.js";
 import { LineGeometry } from "three/examples/jsm/Addons.js";
 import { Line2 } from "three/examples/jsm/Addons.js";
 
-import { GlitchPass } from "three/examples/jsm/Addons.js";
-
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import spline from "./spline";
-import { mix, shiftLeft } from "three/tsl";
 
 let camera;
 let cameraHolder;
@@ -28,13 +25,17 @@ let object,
   objectData = {},
   originalPositions,
   originalPositionSphere;
-let textAbout, strokeGroup;
-let lineMaterialAbout, strokeMeshAbout, totalDistanceLetterAbout;
 let dancingSphere;
-
+let glitchPass, effectComposer, pixelatedPass;
 let mixer, dancer;
 
-let textFeatured, textProject;
+let textAbout,
+  strokeGroup,
+  lineMaterialAbout,
+  strokeMeshAbout,
+  totalDistanceLetterAbout;
+let textFeatured, textProject, textConclusion;
+
 const dLoader = new DRACOLoader();
 dLoader.setDecoderPath(
   "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
@@ -50,7 +51,14 @@ const uniforms = {
   u_opacity: { type: "f", value: 0.0 },
 };
 
-let glitchPass, effectComposer, pixelatedPass;
+const loader = new FontLoader();
+function loadFont(url) {
+  return new Promise((resolve, reject) => {
+    loader.load(url, resolve, undefined, reject);
+  });
+}
+const font = await loadFont("/Sarala_Regular.json");
+
 const Three = () => {
   scene = new THREE.Scene();
   // scene.fog = new THREE.Fog(0x000000, 1, 1000);
@@ -113,7 +121,8 @@ const Three = () => {
   // scene.add(gridHelper);
 
   // ADD STARS
-  Array(200).fill().forEach(addStars);
+  // Array(200).fill().forEach(addStars);
+  addStars();
 
   // START GSAP
   gsapScroll();
@@ -127,6 +136,10 @@ const Three = () => {
   addAboutText();
   addFeaturedText();
   addProjectText();
+  addConclusionText();
+
+  // ADD PORTAL
+  // addPortal();
 
   //   AUTO RENDER
   // window.scrollTo({ top: 0, behavior: "smooth" }); NOT WORKING!!!
@@ -265,24 +278,44 @@ const addDancingSphere = () => {
 };
 
 const addStars = () => {
-  const geometry = new THREE.SphereGeometry(0.25, 6, 2);
+  // FAR STARS
+  let farStars = 200;
+  const geometry = new THREE.SphereGeometry(0.25, 8, 4);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const star = new THREE.Mesh(geometry, material);
-  const closeGeometry = new THREE.SphereGeometry(0.1, 18, 6);
-
-  const closeStar = new THREE.Mesh(closeGeometry, material);
-
-  const [x, y, z] = Array(3)
-    .fill()
-    .map(() => THREE.MathUtils.randFloatSpread(400));
-  star.position.set(x, y, z);
+  const star = new THREE.InstancedMesh(geometry, material, farStars);
   scene.add(star);
+  const dummyStar = new THREE.Object3D();
+  for (let i = 0; i < farStars; i++) {
+    dummyStar.position.x = THREE.MathUtils.randFloatSpread(500);
+    dummyStar.position.y = THREE.MathUtils.randFloatSpread(500);
+    dummyStar.position.z = THREE.MathUtils.randFloatSpread(500);
 
-  const [x1, y1, z1] = Array(3)
-    .fill()
-    .map(() => THREE.MathUtils.randFloatSpread(100));
-  closeStar.position.set(x1, y1, z1);
+    dummyStar.updateMatrix();
+
+    star.setMatrixAt(i, dummyStar.matrix);
+  }
+
+  // CLOSE STARS
+  let closeStars = 200;
+  const closeStarGeometry = new THREE.SphereGeometry(0.1, 24, 12);
+  const closeStarMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const closeStar = new THREE.InstancedMesh(
+    closeStarGeometry,
+    closeStarMaterial,
+    closeStars
+  );
   scene.add(closeStar);
+
+  const closeDummyStar = new THREE.Object3D();
+  for (let i = 0; i < closeStars; i++) {
+    closeDummyStar.position.x = THREE.MathUtils.randFloatSpread(100);
+    closeDummyStar.position.y = THREE.MathUtils.randFloatSpread(100);
+    closeDummyStar.position.z = THREE.MathUtils.randFloatSpread(100);
+
+    closeDummyStar.updateMatrix();
+
+    closeStar.setMatrixAt(i, closeDummyStar.matrix);
+  }
 };
 
 const addDomModel = () => {
@@ -302,16 +335,7 @@ const addDomModel = () => {
 };
 
 const addAboutText = () => {
-  const loader = new FontLoader();
-  // promisify font loading
-  function loadFont(url) {
-    return new Promise((resolve, reject) => {
-      loader.load(url, resolve, undefined, reject);
-    });
-  }
   async function doit() {
-    const font = await loadFont("/Sarala_Regular.json");
-    // loader.load("/Sarala_Regular.json", (font) => {
     const geometry = new TextGeometry("About", {
       font: font,
       size: 1,
@@ -401,16 +425,7 @@ const addAboutText = () => {
 };
 
 const addFeaturedText = () => {
-  const loader = new FontLoader();
-  // promisify font loading
-  function loadFont(url) {
-    return new Promise((resolve, reject) => {
-      loader.load(url, resolve, undefined, reject);
-    });
-  }
   async function doit() {
-    const font = await loadFont("/Sarala_Regular.json");
-    // loader.load("/Sarala_Regular.json", (font) => {
     const geometry = new TextGeometry("Featured Project", {
       font: font,
       size: 1.4,
@@ -441,16 +456,7 @@ const addFeaturedText = () => {
 };
 
 const addProjectText = () => {
-  const loader = new FontLoader();
-  // promisify font loading
-  function loadFont(url) {
-    return new Promise((resolve, reject) => {
-      loader.load(url, resolve, undefined, reject);
-    });
-  }
   async function doit() {
-    const font = await loadFont("/Sarala_Regular.json");
-    // loader.load("/Sarala_Regular.json", (font) => {
     const geometry = new TextGeometry("Projects", {
       font: font,
       size: 1.4,
@@ -481,6 +487,40 @@ const addProjectText = () => {
   doit();
 };
 
+const addConclusionText = () => {
+  async function doit() {
+    const geometry = new TextGeometry("Conclusion", {
+      font: font,
+      size: 1.4,
+
+      depth: 0.1,
+      curveSegments: 6,
+      bevelEnabled: true,
+      bevelThickness: 0.05,
+      bevelSize: 0.01,
+      bevelOffset: 0,
+      bevelSegments: 2,
+    });
+
+    geometry.center();
+    const mat = new THREE.MeshPhysicalMaterial({
+      roughness: 0.5,
+      transmission: 0.8,
+      transparent: true,
+      thickness: 1,
+      // opacity: 0,
+    });
+    textConclusion = new THREE.Mesh(geometry, mat);
+    textConclusion.rotation.y = Math.PI;
+    textConclusion.rotation.x = Math.PI / 2;
+    textConclusion.visible = false;
+    scene.add(textConclusion);
+  }
+  doit();
+};
+
+const addRendererTarget = () => {};
+
 const gsapScroll = () => {
   gsap.registerPlugin(ScrollTrigger);
 
@@ -502,6 +542,7 @@ const gsapScroll = () => {
     );
   });
 
+  // CAMERA MOVES BACKWARD [TRIGGER: HEADER]
   gsap.fromTo(
     camera.position,
     {
@@ -926,6 +967,25 @@ const gsapScroll = () => {
     }
   );
 
+  // REMOVE THE PROJECT TEXT
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".project",
+        start: "top top",
+        end: "bottom top",
+        onEnter: (self) => {
+          if (textProject) textProject.visible = false;
+        },
+        onLeaveBack: (self) => {
+          if (textProject) textProject.visible = true;
+        },
+      },
+    }
+  );
+
+  // MOVE THE DANCER THE THE ACHIEVEMENTS SECTION
   gsap.to(
     {},
     {
@@ -947,52 +1007,108 @@ const gsapScroll = () => {
           if (dancer) dancer.visible = false;
         },
         onUpdate: (self) => {
-          const container = document.querySelector(".model__container");
-          let heightFromTop = container.getBoundingClientRect().top;
+          // const container = document.querySelector(".model__container");
+          // let heightFromTop = container.getBoundingClientRect().top;
           if (dancer) {
             dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
           }
-          console.log(self.progress, ":", heightFromTop);
         },
       },
     }
   );
 
-  // MOVE TOWARDS NEW MODEL
+  const sun = document.querySelector(".sun");
+  const sky = document.querySelector(".sky");
+  const sunSet = document.querySelector(".sunSet");
+  const sunDay = document.querySelector(".sunDay");
+  const horizon = document.querySelector(".horizon");
+  const moon = document.querySelector(".moon");
+  const horizonNight = document.querySelector(".horizonNight");
+
+  // DAY TO SUNSET
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".project",
+        start: "bottom top",
+        endTrigger: ".achievements",
+        end: "20% top",
+        scrub: true,
+        onUpdate: (self) => {
+          let sunSetTime = 0.3;
+          if (self.progress < 0.5)
+            sun.style.setProperty("--sunMeter", self.progress);
+
+          sun.style.opacity = 0.1 * (1 - self.progress) + 0.8 * self.progress;
+
+          sky.style.opacity = 0.52 * (1 - self.progress) + 0.1 * self.progress;
+          if (self.progress > sunSetTime)
+            sunSet.style.opacity =
+              ((self.progress - sunSetTime) / (1 - sunSetTime)) * 0.3;
+          sunDay.style.opacity = self.progress * 0.5 * 0.5;
+          horizon.style.opacity = self.progress * 0.99;
+        },
+      },
+    }
+  );
+
+  // SUNSET TO NIGHT
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".achievements",
+        start: "25% top",
+
+        end: "bottom top",
+        scrub: true,
+        onUpdate: (self) => {
+          sun.style.opacity = 0.8 * (1 - self.progress) + 0.01 * self.progress;
+
+          moon.style.opacity = 0.85 * self.progress;
+          sunSet.style.opacity = 0.3 * (1 - self.progress);
+          sunDay.style.opacity = 0.25 * (1 - self.progress);
+          horizon.style.opacity = 0.99 * (1 - self.progress);
+          horizonNight.style.opacity = 0.8 * self.progress;
+        },
+        onLeave: (self) => {
+          if (textConclusion) {
+            textConclusion.visible = true;
+            console.log(textConclusion.visible);
+          }
+          if (scene) scene.background = new THREE.Color("#020641");
+        },
+        onEnterBack: (self) => {
+          if (textConclusion) textConclusion.visible = false;
+          if (scene) scene.background = null;
+        },
+      },
+    }
+  );
+
   // gsap.fromTo(
-  //   camera.position,
+  //   sky,
   //   {
-  //     x: 0,
-  //     y: 15,
-  //     z: 0,
+  //     opacity: 0.52,
   //   },
   //   {
   //     scrollTrigger: {
-  //       trigger: ".project-start",
+  //       trigger: ".achievements",
   //       start: "top top",
-  //       // endTrigger: ".featured",
   //       end: "bottom top",
-  //       scrub: 0,
-  //       onUpdate: (self) => {
-  //         camera.rotation.x =
-  //           Math.PI * 0.22 * self.progress -
-  //           (1 - self.progress) * (Math.PI * 1.5);
-  //         // camera.rotation.y = y * self.progress - (1 - self.progress) * Math.PI;
-  //         // uniforms.u_opacity.value = (self.progress) ** 4;
-  //         console.log(self.progress);
-  //       },
+  //       scrub: true,
   //     },
-  //     x: 40,
-  //     y: 2,
-  //     z: -42,
+  //     opacity: 0.1,
   //   }
   // );
+  // gsap.to
 
   // START THE GLITCHING WARNING: IT MAY HARM SOME PEOPLE SO GIVE WARNING
   // gsap.to(effectComposer, {
   //   scrollTrigger: {
-  //     trigger: ".featured-glitch",
-  //     start: "20% top",
+  //     trigger: ".achievements",
+  //     start: "top top",
   //     end: "bottom top",
   //     onEnter: () => {
   //       effectComposer.addPass(glitchPass);
@@ -1006,14 +1122,13 @@ const gsapScroll = () => {
   //     onEnterBack: () => {
   //       effectComposer.addPass(glitchPass);
   //     },
-  //     onUpdate: ({ progress, direction, isActive }) => {
-  //       if (progress >= 0.8) glitchPass.goWild = true;
-  //       else glitchPass.goWild = false;
-  //     },
+  //     // onUpdate: ({ progress, direction, isActive }) => {
+  //     //   if (progress >= 0.8) glitchPass.goWild = true;
+  //     //   else glitchPass.goWild = false;
+  //     // },
   //     scrub: 0,
   //   },
   // });
-  // USE LATER
 };
 
 // OPTION DROPPED [WILL NOT BE USED]

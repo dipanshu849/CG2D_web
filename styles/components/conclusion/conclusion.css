@@ -1,0 +1,19 @@
+/* .sea__firstLayer {
+  background-color: #72d4ec;
+} */
+
+.sea__secondLayer {
+  /* background-color: #061e65; */
+  background-image: linear-gradient(
+    to bottom,
+    #182848 2%,
+    #2980b9 75%,
+    #061e65
+  );
+  /* filter: blur(2px); */
+}
+
+.sea__thirdLayer {
+  /* background-color: #020641e6; */
+  border: 2px solid blue;
+}
