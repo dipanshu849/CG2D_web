@@ -17,6 +17,8 @@ import "../styles/utils.css";
 import "./vanilla-tilt.js";
 
 import Three from "./three/three";
+import oceanEffect from "./components/oceanEffect.js";
+// import ripple from "./components/ripple";
 // import slider from "./components/imageSlider";
 Three();
-// slider();
+oceanEffect();

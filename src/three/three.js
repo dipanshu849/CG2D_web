@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { Quaternion } from "three";
+
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { DRACOLoader } from "three/examples/jsm/Addons.js";
 import { FontLoader } from "three/examples/jsm/Addons.js";
@@ -14,8 +17,12 @@ import { LineMaterial } from "three/examples/jsm/Addons.js";
 import { LineGeometry } from "three/examples/jsm/Addons.js";
 import { Line2 } from "three/examples/jsm/Addons.js";
 
+import { Water } from "three/examples/jsm/Addons.js";
+import { Sky } from "three/examples/jsm/Addons.js";
+
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 let camera;
 let cameraHolder;
@@ -28,6 +35,12 @@ let object,
 let dancingSphere;
 let glitchPass, effectComposer, pixelatedPass;
 let mixer, dancer;
+let star, closeStar;
+let water, sky, endingEnv;
+let jackShip,
+  mixerShip,
+  actionShip,
+  turn = "left";
 
 let textAbout,
   strokeGroup,
@@ -49,6 +62,9 @@ const uniforms = {
   },
   u_time: { type: "f", value: 5.0 },
   u_opacity: { type: "f", value: 0.0 },
+  u_texture: {
+    value: new THREE.TextureLoader().load("/effectImages/ripple.png"),
+  },
 };
 
 const loader = new FontLoader();
@@ -60,9 +76,10 @@ function loadFont(url) {
 const font = await loadFont("/Sarala_Regular.json");
 
 const Three = () => {
+  const stats = new Stats();
+  document.body.appendChild(stats.dom);
+
   scene = new THREE.Scene();
-  // scene.fog = new THREE.Fog(0x000000, 1, 1000);
-  // CAMERA
   camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -121,16 +138,19 @@ const Three = () => {
   // scene.add(gridHelper);
 
   // ADD STARS
-  // Array(200).fill().forEach(addStars);
   addStars();
 
   // START GSAP
   gsapScroll();
 
+  // ADD EYE EFFECT
+  // addEyeEffect();
+
   // ADD MODELS
   addPointModel();
   addDancingSphere();
   addDomModel();
+  addShipModel();
 
   // ADD TEXT
   addAboutText();
@@ -138,16 +158,61 @@ const Three = () => {
   addProjectText();
   addConclusionText();
 
-  // ADD PORTAL
-  // addPortal();
+  // ADD WATER AND SKY
+  addEndingScene();
 
   //   AUTO RENDER
   // window.scrollTo({ top: 0, behavior: "smooth" }); NOT WORKING!!!
   const clock = new THREE.Clock();
   function animate() {
-    uniforms.u_time.value = clock.getElapsedTime();
-    effectComposer.render();
-    if (mixer) mixer.update(0.02);
+    stats.update();
+    let value = clock.getDelta();
+    if (uniforms.u_opacity.value > 0.0) uniforms.u_time.value += value;
+    if (water && endingEnv.visible) {
+      water.material.uniforms["time"].value += value * 0.5;
+    }
+    // if (mixerShip && jackShip.visible) {
+    //   mixerShip.update(value);
+
+    //   if (turn === "left") {
+    //     jackShip.rotation.z -= Math.cos(value) * 0.001 * Math.random();
+    //     if (jackShip.rotation.z <= -0.1 - Math.random() * 0.1) {
+    //       turn = "right";
+    //     }
+    //   }
+    //   if (turn === "right") {
+    //     jackShip.rotation.z += Math.cos(value) * 0.001 * Math.random();
+    //     if (jackShip.rotation.z >= 0.1 + Math.random() * 0.1) {
+    //       turn = "left";
+    //     }
+    //   }
+
+    //   jackShip.position.z += Math.sin(value);
+    // }
+    // Optimize ship animations with delta-based updates
+    if (mixerShip && jackShip.visible) {
+      mixerShip.update(value);
+
+      // Cache values to avoid recalculation
+      const rotationSpeed = Math.cos(value) * 0.001;
+      const randomFactor = Math.random() * 0.1;
+
+      if (turn === "left") {
+        jackShip.rotation.z -= rotationSpeed * Math.random();
+        if (jackShip.rotation.z <= -0.1 - randomFactor) {
+          turn = "right";
+        }
+      } else {
+        jackShip.rotation.z += rotationSpeed * Math.random();
+        if (jackShip.rotation.z >= 0.1 + randomFactor) {
+          turn = "left";
+        }
+      }
+
+      jackShip.position.z += Math.sin(value);
+    }
+    if (mixer && dancer.visible) mixer.update(value);
+    effectComposer.render(0.1);
   }
   window.addEventListener("resize", onWindowResize, true);
   function onWindowResize() {
@@ -159,6 +224,117 @@ const Three = () => {
   }
 
   renderer.setAnimationLoop(animate);
+};
+
+// I DON'T UNDERSTAND THIS FULLY
+const addEyeEffect = () => {
+  // Mouse and camera state tracking
+  let mouse = { x: 0, y: 0 };
+  let isAtTop = true;
+  let isTransitioning = false;
+  let effectEnabled = true;
+  let cameraStartQuaternion = new THREE.Quaternion();
+  const lookSensitivity = 0.0015;
+  const dampingFactor = 0.05;
+  const transitionDuration = 1.0; // seconds
+  let transitionStartTime = 0;
+
+  // Track mouse movement
+  function onMouseMove(event) {
+    if (!effectEnabled) return;
+
+    mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
+    mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
+  }
+
+  // Handle scroll events
+  function onScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const wasAtTop = isAtTop;
+    isAtTop = scrollTop < 10; // Small threshold for "at top"
+
+    // Detect when we start scrolling away from top
+    if (wasAtTop && !isAtTop && effectEnabled) {
+      disableEffect();
+    }
+    // Detect when we return to top
+    else if (!wasAtTop && isAtTop && !effectEnabled) {
+      enableEffect();
+    }
+  }
+
+  function enableEffect() {
+    effectEnabled = true;
+    mouse.x = 0;
+    mouse.y = 0;
+  }
+
+  function disableEffect() {
+    effectEnabled = false;
+    isTransitioning = true;
+    transitionStartTime = performance.now();
+  }
+
+  // Add the look-around effect
+  function updateCameraLook() {
+    if (effectEnabled) {
+      // Store current camera state
+      cameraStartQuaternion.copy(camera.quaternion);
+
+      // Create look target
+      const lookTarget = new THREE.Vector3();
+      camera.getWorldPosition(lookTarget);
+      lookTarget.x += mouse.x;
+      lookTarget.y -= mouse.y;
+      lookTarget.z -= 1;
+
+      // Create temporary camera for look rotation
+      const tempCamera = camera.clone();
+      tempCamera.lookAt(lookTarget);
+
+      // Smoothly interpolate to look rotation
+      camera.quaternion.slerpQuaternions(
+        cameraStartQuaternion,
+        tempCamera.quaternion,
+        dampingFactor
+      );
+    } else if (isTransitioning) {
+      // Handle transition back to neutral rotation
+      const elapsed = (performance.now() - transitionStartTime) / 1000;
+      const progress = Math.min(elapsed / transitionDuration, 1);
+
+      // Create target quaternion (neutral rotation)
+      const targetQuaternion = new THREE.Quaternion();
+      const tempCamera = camera.clone();
+      tempCamera.rotation.set(0, 0, 0);
+      targetQuaternion.copy(tempCamera.quaternion);
+
+      // Interpolate to neutral rotation
+      camera.quaternion.slerpQuaternions(
+        cameraStartQuaternion,
+        targetQuaternion,
+        progress
+      );
+
+      // Check if transition is complete
+      if (progress === 1) {
+        isTransitioning = false;
+      }
+    }
+
+    requestAnimationFrame(updateCameraLook);
+  }
+
+  // Cleanup when needed
+  function cleanup() {
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("scroll", onScroll);
+  }
+
+  // Setup
+  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("scroll", onScroll);
+  updateCameraLook();
 };
 
 const addPointModel = () => {
@@ -282,7 +458,7 @@ const addStars = () => {
   let farStars = 200;
   const geometry = new THREE.SphereGeometry(0.25, 8, 4);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const star = new THREE.InstancedMesh(geometry, material, farStars);
+  star = new THREE.InstancedMesh(geometry, material, farStars);
   scene.add(star);
   const dummyStar = new THREE.Object3D();
   for (let i = 0; i < farStars; i++) {
@@ -299,7 +475,7 @@ const addStars = () => {
   let closeStars = 200;
   const closeStarGeometry = new THREE.SphereGeometry(0.1, 24, 12);
   const closeStarMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const closeStar = new THREE.InstancedMesh(
+  closeStar = new THREE.InstancedMesh(
     closeStarGeometry,
     closeStarMaterial,
     closeStars
@@ -332,6 +508,29 @@ const addDomModel = () => {
     mixer = new THREE.AnimationMixer(dancer);
     mixer.clipAction(gltf.animations[0]).play();
   });
+};
+
+const addShipModel = () => {
+  const loader = new GLTFLoader();
+  loader.setDRACOLoader(dLoader);
+  loader.load(
+    "/models/jack_ship_c.glb",
+    (gltf) => {
+      jackShip = gltf.scene;
+      jackShip.rotation.y = Math.PI * 1.2;
+      jackShip.position.y = -13;
+      jackShip.position.x = 10;
+      // jackShip.scale.x = jackShip.scale.y = jackShip.scale.z = 0.5;
+      let animations = gltf.animations[0];
+      mixerShip = new THREE.AnimationMixer(jackShip);
+      actionShip = mixerShip.clipAction(animations);
+      actionShip.play();
+      endingEnv.add(jackShip);
+      jackShip.visible = false;
+    },
+    undefined,
+    undefined
+  );
 };
 
 const addAboutText = () => {
@@ -492,7 +691,6 @@ const addConclusionText = () => {
     const geometry = new TextGeometry("Conclusion", {
       font: font,
       size: 1.4,
-
       depth: 0.1,
       curveSegments: 6,
       bevelEnabled: true,
@@ -503,11 +701,26 @@ const addConclusionText = () => {
     });
 
     geometry.center();
-    const mat = new THREE.MeshPhysicalMaterial({
-      roughness: 0.5,
-      transmission: 0.8,
-      transparent: true,
-      thickness: 1,
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: `
+      varying vec2 vUv;
+      uniform float u_time;
+      void main() { 
+        vUv = uv;
+        float newPositionZ =  sin(position.z +u_time);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y, newPositionZ, 1.0);
+        }
+      `,
+      fragmentShader: `
+      uniform sampler2D u_texture;
+      varying vec2 vUv;
+      uniform float u_time;
+      void main() {
+        vec4 color = texture2D(u_texture, vUv);
+        gl_FragColor = vec4(color.rgb, 0.5);
+        }
+      `,
       // opacity: 0,
     });
     textConclusion = new THREE.Mesh(geometry, mat);
@@ -519,7 +732,50 @@ const addConclusionText = () => {
   doit();
 };
 
-const addRendererTarget = () => {};
+const addEndingScene = () => {
+  endingEnv = new THREE.Group();
+
+  // Water setup
+  const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+  const waterNormals = new THREE.TextureLoader().load(
+    "/effectImages/waternormals.jpg"
+  );
+  waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+
+  water = new Water(waterGeometry, {
+    textureWidth: 512,
+    textureHeight: 512,
+    waterNormals,
+    sunDirection: new THREE.Vector3(0, -1, 0), // Light from above
+    sunColor: 0x3366ff, // Blue-tinted light
+    waterColor: 0x001133, // Deeper blue color
+    distortionScale: 3.7, // Increased distortion
+  });
+  // water.material.side = THREE.DoubleSide;
+
+  water.rotation.x = -Math.PI / 2;
+  water.position.set(0, -8, -520);
+  endingEnv.add(water);
+
+  // Sky setup
+  sky = new Sky();
+  sky.scale.setScalar(10000);
+  endingEnv.add(sky);
+
+  sky.material.uniforms["turbidity"].value = 0.1;
+  sky.material.uniforms["rayleigh"].value = 0.01;
+  sky.material.uniforms["mieCoefficient"].value = 0.0005;
+  sky.material.uniforms["mieDirectionalG"].value = 0.8;
+  sky.material.uniforms["sunPosition"].value = new THREE.Vector3(
+    0,
+    1000,
+    -2000
+  );
+  // sky.material.wireframe = true;
+  sky.position.y = 50;
+  scene.add(endingEnv);
+  endingEnv.visible = false;
+};
 
 const gsapScroll = () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -757,13 +1013,8 @@ const gsapScroll = () => {
               origZ + (targetZ - origZ) * progress.progress
             );
           }
-
           // Mark positions for update
           initialPositions.needsUpdate = true;
-
-          if (dancingSphere) {
-            // dancingSphere.geometry.rea
-          }
         }
       },
     },
@@ -799,7 +1050,7 @@ const gsapScroll = () => {
     }
   );
 
-  // MOVE TO Y-AXIS (LOOKAT 0)
+  // MOVE TO Y-AXIS (LOOKAT 0) + ROTATION
   gsap.fromTo(
     camera.position,
     {
@@ -820,7 +1071,6 @@ const gsapScroll = () => {
             (1 - self.progress) * (Math.PI * 1.35);
           camera.rotation.y =
             -Math.PI * self.progress - (1 - self.progress) * (Math.PI * 1.2);
-          // uniforms.u_opacity.value = (self.progress) ** 4;
         },
       },
       x: 0,
@@ -841,12 +1091,6 @@ const gsapScroll = () => {
         start: "top top",
         end: "50% top",
         scrub: 0,
-        // onEnter: () => {
-        //   effectComposer.addPass(pixelatedPass);
-        // },
-        // onLeaveBack: () => {
-        //   effectComposer.removePass(pixelatedPass);
-        // },
       },
       value: 0.01,
     }
@@ -893,8 +1137,6 @@ const gsapScroll = () => {
         },
 
         onUpdate: (self) => {
-          // if (progress >= 0.8) glitchPass.goWild = true;
-          // else glitchPass.goWild = false;
           if (pixelatedPass) {
             pixelatedPass.setPixelSize(
               self.progress ** 2 * 200 + window.devicePixelRatio
@@ -944,21 +1186,12 @@ const gsapScroll = () => {
         onLeave: () => {
           effectComposer.removePass(pixelatedPass);
           if (textFeatured) textFeatured.visible = false;
-          // if (picnicSpot) {
-          //   // picnicSpot.name = "picnic";
-          //   picnicSpot.visible = true;
-          // }
         },
         onEnterBack: () => {
           effectComposer.addPass(pixelatedPass);
           if (textFeatured) textFeatured.visible = true;
-          // if (picnicSpot) {
-          //   picnicSpot.visible = false;
-          // }
         },
         onUpdate: (self) => {
-          // if (progress >= 0.8) glitchPass.goWild = true;
-          // else glitchPass.goWild = false;
           if (pixelatedPass) {
             pixelatedPass.setPixelSize(202 - self.progress * 200 + 1);
           }
@@ -977,14 +1210,18 @@ const gsapScroll = () => {
         end: "bottom top",
         onEnter: (self) => {
           if (textProject) textProject.visible = false;
+          // if (scene) scene.background = new THREE.Color("#000c1a");
+          if (scene) scene.background = new THREE.Color("#001633");
         },
         onLeaveBack: (self) => {
           if (textProject) textProject.visible = true;
+          if (scene) scene.background = null;
         },
       },
     }
   );
 
+  let achievements = document.querySelector(".achievements");
   // MOVE THE DANCER THE THE ACHIEVEMENTS SECTION
   gsap.to(
     {},
@@ -996,19 +1233,21 @@ const gsapScroll = () => {
         scrub: 0,
         onEnter: () => {
           if (dancer) dancer.visible = true;
+          achievements.style.pointerEvents = "all";
         },
         onEnterBack: () => {
           if (dancer) dancer.visible = true;
+          achievements.style.pointerEvents = "all";
         },
         onLeave: () => {
           if (dancer) dancer.visible = false;
+          achievements.style.pointerEvents = "none";
         },
         onLeaveBack: () => {
           if (dancer) dancer.visible = false;
+          achievements.style.pointerEvents = "none";
         },
         onUpdate: (self) => {
-          // const container = document.querySelector(".model__container");
-          // let heightFromTop = container.getBoundingClientRect().top;
           if (dancer) {
             dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
           }
@@ -1075,60 +1314,84 @@ const gsapScroll = () => {
         onLeave: (self) => {
           if (textConclusion) {
             textConclusion.visible = true;
-            console.log(textConclusion.visible);
           }
-          if (scene) scene.background = new THREE.Color("#020641");
         },
         onEnterBack: (self) => {
           if (textConclusion) textConclusion.visible = false;
-          if (scene) scene.background = null;
         },
       },
     }
   );
 
-  // gsap.fromTo(
-  //   sky,
-  //   {
-  //     opacity: 0.52,
-  //   },
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".achievements",
-  //       start: "top top",
-  //       end: "bottom top",
-  //       scrub: true,
-  //     },
-  //     opacity: 0.1,
-  //   }
-  // );
-  // gsap.to
+  // GET THE WATER BELOW SEA
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".sea__firstLayer",
+        start: "center bottom",
+        end: "bottom top",
+        scrub: 0,
+        onEnter: (self) => {
+          if (endingEnv) endingEnv.visible = true;
+        },
+        onLeaveBack: (self) => {
+          if (endingEnv) endingEnv.visible = false;
+        },
+        onUpdate: (self) => {
+          if (endingEnv) {
+            water.position.z = -520 * (1 - self.progress) - 480 * self.progress;
+          }
+        },
+      },
+    }
+  );
 
-  // START THE GLITCHING WARNING: IT MAY HARM SOME PEOPLE SO GIVE WARNING
-  // gsap.to(effectComposer, {
-  //   scrollTrigger: {
-  //     trigger: ".achievements",
-  //     start: "top top",
-  //     end: "bottom top",
-  //     onEnter: () => {
-  //       effectComposer.addPass(glitchPass);
-  //     },
-  //     onLeaveBack: () => {
-  //       effectComposer.removePass(glitchPass);
-  //     },
-  //     onLeave: () => {
-  //       effectComposer.removePass(glitchPass);
-  //     },
-  //     onEnterBack: () => {
-  //       effectComposer.addPass(glitchPass);
-  //     },
-  //     // onUpdate: ({ progress, direction, isActive }) => {
-  //     //   if (progress >= 0.8) glitchPass.goWild = true;
-  //     //   else glitchPass.goWild = false;
-  //     // },
-  //     scrub: 0,
-  //   },
-  // });
+  // ROTATION
+  gsap.fromTo(
+    camera.position,
+    {
+      x: 0,
+      y: 15,
+      z: 0,
+    },
+    {
+      scrollTrigger: {
+        trigger: ".sea__thirdLayer",
+        scrub: 0,
+        start: "center top",
+        end: "bottom top",
+        onUpdate: (self) => {
+          camera.rotation.x =
+            -Math.PI * 1.5 * (1 - self.progress) +
+            Math.PI * 0.05 * self.progress;
+          // camera.rotation.y =
+          //   -Math.PI * self.progress - (1 - self.progress) * (Math.PI * 1.2);
+        },
+      },
+      x: 100,
+      y: 5,
+      z: -400,
+    }
+  );
+
+  // MAKE THE SHIP MODEL APPEAR
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".conclusion",
+        start: "center bottom",
+        end: "bottom top",
+        onEnter: (self) => {
+          if (jackShip) jackShip.visible = true;
+        },
+        onLeaveBack: (self) => {
+          if (jackShip) jackShip.visible = false;
+        },
+      },
+    }
+  );
 };
 
 // OPTION DROPPED [WILL NOT BE USED]
