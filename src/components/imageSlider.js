@@ -1,23 +1,42 @@
-import gsap from "gsap";
-
 const slider = () => {
-  let cont = document.querySelector(".featured__img-wrapper-container"),
-    mainCont = document.querySelector(".container"),
-    sections = gsap.utils.toArray(".featured__img-wrapper img"),
-    tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".featured__img-container-main",
-        pin: true,
-        scrub: 1,
-        snap: 1 / (sections.length - 1),
-        start: "top top",
-        end: "+=" + (cont.scrollWidth - mainCont.scrollWidth),
-      },
-    });
+  let sliderContainer = document.querySelector(".featured__img-container-main");
+  let widthSliderContainer = sliderContainer.offsetWidth;
+  let imgContainer = document.querySelector(".featured__img-wrapper-container");
 
-  tl.to(sections, {
-    xPercent: -100 * (sections.length - 1),
-    ease: "none",
+  window.addEventListener("resize", () => {
+    widthSliderContainer = sliderContainer.offsetWidth;
+  });
+
+  const handleMove = (x) => {
+    imgContainer.style.transform = `translateX(${
+      (x / widthSliderContainer) * -75
+    }%)`;
+    imgContainer.style.transition = "transform 0.1s";
+  };
+
+  sliderContainer.addEventListener("mouseleave", () => {
+    imgContainer.style.transition = "transform 1.5s ease-in-out";
+    imgContainer.style.transform = `translateX(0%)`;
+  });
+
+  // sliderContainer.addEventListener("mouseenter", () => {
+  //   imgContainer.style.transition = "transform 0.5s ease-in-out";
+  // });
+
+  sliderContainer.addEventListener("mousemove", (e) => {
+    handleMove(e.offsetX);
+  });
+
+  sliderContainer.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    const rect = sliderContainer.getBoundingClientRect();
+    const offsetX = touch.clientX - rect.left;
+    handleMove(offsetX);
+  });
+
+  sliderContainer.addEventListener("touchend", () => {
+    imgContainer.style.transition = "transform 1.5s ease-in-out";
+    imgContainer.style.transform = `translateX(0%)`;
   });
 };
 

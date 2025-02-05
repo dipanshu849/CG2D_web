@@ -3,6 +3,8 @@
   text-align: center;
   position: relative;
   pointer-events: none;
+  background-color: rgba(241, 245, 249, 0.9);
+  padding-bottom: 1em;
 }
 
 .achievements__title {
@@ -141,7 +143,6 @@
   z-index: -1;
   position: absolute;
   inset: 0;
-  /* border: 2px solid red; */
 }
 
 /* xs */

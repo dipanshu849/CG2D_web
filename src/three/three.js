@@ -63,7 +63,7 @@ const uniforms = {
   u_time: { type: "f", value: 5.0 },
   u_opacity: { type: "f", value: 0.0 },
   u_texture: {
-    value: new THREE.TextureLoader().load("/effectImages/ripple.png"),
+    value: new THREE.TextureLoader().load("/effectImages/waternormals.jpg"),
   },
 };
 
@@ -149,7 +149,7 @@ const Three = () => {
   // ADD MODELS
   addPointModel();
   addDancingSphere();
-  addDomModel();
+  // addDomModel();
   addShipModel();
 
   // ADD TEXT
@@ -167,29 +167,11 @@ const Three = () => {
   function animate() {
     stats.update();
     let value = clock.getDelta();
-    if (uniforms.u_opacity.value > 0.0) uniforms.u_time.value += value;
+    if (uniforms.u_opacity.value > 0.0 || textConclusion.visible)
+      uniforms.u_time.value += value;
     if (water && endingEnv.visible) {
       water.material.uniforms["time"].value += value * 0.5;
     }
-    // if (mixerShip && jackShip.visible) {
-    //   mixerShip.update(value);
-
-    //   if (turn === "left") {
-    //     jackShip.rotation.z -= Math.cos(value) * 0.001 * Math.random();
-    //     if (jackShip.rotation.z <= -0.1 - Math.random() * 0.1) {
-    //       turn = "right";
-    //     }
-    //   }
-    //   if (turn === "right") {
-    //     jackShip.rotation.z += Math.cos(value) * 0.001 * Math.random();
-    //     if (jackShip.rotation.z >= 0.1 + Math.random() * 0.1) {
-    //       turn = "left";
-    //     }
-    //   }
-
-    //   jackShip.position.z += Math.sin(value);
-    // }
-    // Optimize ship animations with delta-based updates
     if (mixerShip && jackShip.visible) {
       mixerShip.update(value);
 
@@ -211,7 +193,7 @@ const Three = () => {
 
       jackShip.position.z += Math.sin(value);
     }
-    if (mixer && dancer.visible) mixer.update(value);
+    // if (mixer && dancer.visible) mixer.update(value);
     effectComposer.render(0.1);
   }
   window.addEventListener("resize", onWindowResize, true);
@@ -440,7 +422,6 @@ const addPointModel = () => {
 
 const addDancingSphere = () => {
   const mat = new THREE.ShaderMaterial({
-    // opacity: 1,
     wireframe: true,
     uniforms,
     transparent: true,
@@ -448,8 +429,8 @@ const addDancingSphere = () => {
     fragmentShader: document.getElementById("fragmentshader").textContent,
   });
   const geo = new THREE.IcosahedronGeometry(15, 15);
-  // const geo = new THREE.SphereGeometry(10, 32, 32);
   dancingSphere = new THREE.Mesh(geo, mat);
+  dancingSphere.visible = false;
   scene.add(dancingSphere);
 };
 
@@ -494,21 +475,21 @@ const addStars = () => {
   }
 };
 
-const addDomModel = () => {
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dLoader);
-  loader.load("/models/space_dance_c.glb", (gltf) => {
-    dancer = gltf.scene;
-    scene.add(dancer);
-    dancer.scale.x = dancer.scale.y = dancer.scale.z = 2;
-    dancer.rotation.x = -Math.PI / 2;
-    dancer.rotation.z = Math.PI;
-    dancer.position.y = 6;
-    dancer.visible = false;
-    mixer = new THREE.AnimationMixer(dancer);
-    mixer.clipAction(gltf.animations[0]).play();
-  });
-};
+// const addDomModel = () => {
+//   const loader = new GLTFLoader();
+//   loader.setDRACOLoader(dLoader);
+//   loader.load("/models/space_dance_c.glb", (gltf) => {
+//     dancer = gltf.scene;
+//     scene.add(dancer);
+//     dancer.scale.x = dancer.scale.y = dancer.scale.z = 2;
+//     dancer.rotation.x = -Math.PI / 2;
+//     dancer.rotation.z = Math.PI;
+//     dancer.position.y = 6;
+//     dancer.visible = false;
+//     mixer = new THREE.AnimationMixer(dancer);
+//     mixer.clipAction(gltf.animations[0]).play();
+//   });
+// };
 
 const addShipModel = () => {
   const loader = new GLTFLoader();
@@ -519,8 +500,9 @@ const addShipModel = () => {
       jackShip = gltf.scene;
       jackShip.rotation.y = Math.PI * 1.2;
       jackShip.position.y = -13;
-      jackShip.position.x = 10;
-      // jackShip.scale.x = jackShip.scale.y = jackShip.scale.z = 0.5;
+      jackShip.position.x = 5;
+      jackShip.position.z = 100;
+      jackShip.renderOrder = 2;
       let animations = gltf.animations[0];
       mixerShip = new THREE.AnimationMixer(jackShip);
       actionShip = mixerShip.clipAction(animations);
@@ -708,7 +690,7 @@ const addConclusionText = () => {
       uniform float u_time;
       void main() { 
         vUv = uv;
-        float newPositionZ =  sin(position.z +u_time);
+        float newPositionZ =  sin(position.z +u_time + 0.1);
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y, newPositionZ, 1.0);
         }
       `,
@@ -750,28 +732,44 @@ const addEndingScene = () => {
     sunColor: 0x3366ff, // Blue-tinted light
     waterColor: 0x001133, // Deeper blue color
     distortionScale: 3.7, // Increased distortion
+    alpha: 0.0,
   });
-  // water.material.side = THREE.DoubleSide;
 
+  water.material.transparent = true;
   water.rotation.x = -Math.PI / 2;
-  water.position.set(0, -8, -520);
+  water.position.set(0, -6, 0);
   endingEnv.add(water);
 
-  // Sky setup
   sky = new Sky();
   sky.scale.setScalar(10000);
   endingEnv.add(sky);
 
-  sky.material.uniforms["turbidity"].value = 0.1;
+  sky.material.uniforms.opacity = { type: "f", value: 0.0 };
+
+  // CONSOLE.LOG SKY AND CHEKC MATERIAL->FRAGMENTSHADER->LAST FEW LINES
+  const fragmentShader = sky.material.fragmentShader.replace(
+    "varying vec3 vWorldPosition;",
+    "varying vec3 vWorldPosition;\n\n\tuniform float opacity;"
+  );
+
+  const modifiedShader = fragmentShader.replace(
+    "gl_FragColor = vec4( retColor, 1.0 );",
+    "gl_FragColor = vec4( retColor, opacity );"
+  );
+
+  sky.material.fragmentShader = modifiedShader;
+  sky.material.transparent = true;
+
+  sky.material.uniforms["turbidity"].value = 10;
   sky.material.uniforms["rayleigh"].value = 0.01;
-  sky.material.uniforms["mieCoefficient"].value = 0.0005;
+  sky.material.uniforms["mieCoefficient"].value = 0.005;
   sky.material.uniforms["mieDirectionalG"].value = 0.8;
   sky.material.uniforms["sunPosition"].value = new THREE.Vector3(
     0,
     1000,
     -2000
   );
-  // sky.material.wireframe = true;
+
   sky.position.y = 50;
   scene.add(endingEnv);
   endingEnv.visible = false;
@@ -1091,6 +1089,9 @@ const gsapScroll = () => {
         start: "top top",
         end: "50% top",
         scrub: 0,
+        onEnter: () => {
+          if (dancingSphere) dancingSphere.visible = true;
+        },
       },
       value: 0.01,
     }
@@ -1130,10 +1131,12 @@ const gsapScroll = () => {
         onEnter: () => {
           effectComposer.addPass(pixelatedPass);
           if (textProject) textProject.visible = true;
+          if (dancingSphere) dancingSphere.visible = false;
         },
         onLeaveBack: () => {
           effectComposer.removePass(pixelatedPass);
           if (textProject) textProject.visible = false;
+          if (dancingSphere) dancingSphere.visible = true;
         },
 
         onUpdate: (self) => {
@@ -1148,7 +1151,6 @@ const gsapScroll = () => {
           if (textProject) {
             textProject.material.opacity = self.progress ** 2;
           }
-          uniforms.u_opacity.value = 0.01 * (1 - self.progress) + 0.0;
         },
       },
     }
@@ -1210,7 +1212,6 @@ const gsapScroll = () => {
         end: "bottom top",
         onEnter: (self) => {
           if (textProject) textProject.visible = false;
-          // if (scene) scene.background = new THREE.Color("#000c1a");
           if (scene) scene.background = new THREE.Color("#001633");
         },
         onLeaveBack: (self) => {
@@ -1221,127 +1222,147 @@ const gsapScroll = () => {
     }
   );
 
-  let achievements = document.querySelector(".achievements");
-  // MOVE THE DANCER THE THE ACHIEVEMENTS SECTION
+  // let achievements = document.querySelector(".achievements");
+  // // MOVE THE DANCER THE THE ACHIEVEMENTS SECTION
+  // gsap.to(
+  //   {},
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".model__container",
+  //       start: "top bottom",
+  //       end: "bottom top",
+  //       scrub: 0,
+  //       onEnter: () => {
+  //         if (dancer) dancer.visible = true;
+  //         achievements.style.pointerEvents = "all";
+  //       },
+  //       onEnterBack: () => {
+  //         if (dancer) dancer.visible = true;
+  //         achievements.style.pointerEvents = "all";
+  //       },
+  //       onLeave: () => {
+  //         if (dancer) dancer.visible = false;
+  //         achievements.style.pointerEvents = "none";
+  //       },
+  //       onLeaveBack: () => {
+  //         if (dancer) dancer.visible = false;
+  //         achievements.style.pointerEvents = "none";
+  //       },
+  //       onUpdate: (self) => {
+  //         if (dancer) {
+  //           dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
+  //         }
+  //       },
+  //     },
+  //   }
+  // );
+
+  // const sun = document.querySelector(".sun");
+  // const sky = document.querySelector(".sky");
+  // const sunSet = document.querySelector(".sunSet");
+  // const sunDay = document.querySelector(".sunDay");
+  // const horizon = document.querySelector(".horizon");
+  // const moon = document.querySelector(".moon");
+  // const horizonNight = document.querySelector(".horizonNight");
+
+  // DAY TO SUNSET
+  // gsap.to(
+  //   {},
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".project",
+  //       start: "bottom top",
+  //       endTrigger: ".achievements",
+  //       end: "20% top",
+  //       scrub: true,
+  //       onUpdate: (self) => {
+  //         let sunSetTime = 0.3;
+  //         if (self.progress < 0.5)
+  //           sun.style.setProperty("--sunMeter", self.progress);
+
+  //         sun.style.opacity = 0.1 * (1 - self.progress) + 0.8 * self.progress;
+
+  //         sky.style.opacity = 0.52 * (1 - self.progress) + 0.1 * self.progress;
+  //         if (self.progress > sunSetTime)
+  //           sunSet.style.opacity =
+  //             ((self.progress - sunSetTime) / (1 - sunSetTime)) * 0.3;
+  //         sunDay.style.opacity = self.progress * 0.5 * 0.5;
+  //         horizon.style.opacity = self.progress * 0.99;
+  //       },
+  //     },
+  //   }
+  // );
+
+  // // SUNSET TO NIGHT
+  // gsap.to(
+  //   {},
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".achievements",
+  //       start: "25% top",
+
+  //       end: "bottom top",
+  //       scrub: true,
+  //       onUpdate: (self) => {
+  //         sun.style.opacity = 0.8 * (1 - self.progress) + 0.01 * self.progress;
+
+  //         moon.style.opacity = 0.85 * self.progress;
+  //         sunSet.style.opacity = 0.3 * (1 - self.progress);
+  //         sunDay.style.opacity = 0.25 * (1 - self.progress);
+  //         horizon.style.opacity = 0.99 * (1 - self.progress);
+  //         horizonNight.style.opacity = 0.8 * self.progress;
+  //       },
+  //       onLeave: (self) => {
+  //         if (textConclusion) {
+  //           textConclusion.visible = true;
+  //         }
+  //       },
+  //       onEnterBack: (self) => {
+  //         if (textConclusion) textConclusion.visible = false;
+  //       },
+  //     },
+  //   }
+  // );
+
+  // ADD CONCLUSION TEXT
   gsap.to(
     {},
     {
       scrollTrigger: {
         trigger: ".model__container",
-        start: "top bottom",
+        start: "top center",
         end: "bottom top",
-        scrub: 0,
+        scrub: true,
         onEnter: () => {
-          if (dancer) dancer.visible = true;
-          achievements.style.pointerEvents = "all";
-        },
-        onEnterBack: () => {
-          if (dancer) dancer.visible = true;
-          achievements.style.pointerEvents = "all";
-        },
-        onLeave: () => {
-          if (dancer) dancer.visible = false;
-          achievements.style.pointerEvents = "none";
+          if (textConclusion) textConclusion.visible = true;
         },
         onLeaveBack: () => {
-          if (dancer) dancer.visible = false;
-          achievements.style.pointerEvents = "none";
-        },
-        onUpdate: (self) => {
-          if (dancer) {
-            dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
-          }
-        },
-      },
-    }
-  );
-
-  const sun = document.querySelector(".sun");
-  const sky = document.querySelector(".sky");
-  const sunSet = document.querySelector(".sunSet");
-  const sunDay = document.querySelector(".sunDay");
-  const horizon = document.querySelector(".horizon");
-  const moon = document.querySelector(".moon");
-  const horizonNight = document.querySelector(".horizonNight");
-
-  // DAY TO SUNSET
-  gsap.to(
-    {},
-    {
-      scrollTrigger: {
-        trigger: ".project",
-        start: "bottom top",
-        endTrigger: ".achievements",
-        end: "20% top",
-        scrub: true,
-        onUpdate: (self) => {
-          let sunSetTime = 0.3;
-          if (self.progress < 0.5)
-            sun.style.setProperty("--sunMeter", self.progress);
-
-          sun.style.opacity = 0.1 * (1 - self.progress) + 0.8 * self.progress;
-
-          sky.style.opacity = 0.52 * (1 - self.progress) + 0.1 * self.progress;
-          if (self.progress > sunSetTime)
-            sunSet.style.opacity =
-              ((self.progress - sunSetTime) / (1 - sunSetTime)) * 0.3;
-          sunDay.style.opacity = self.progress * 0.5 * 0.5;
-          horizon.style.opacity = self.progress * 0.99;
-        },
-      },
-    }
-  );
-
-  // SUNSET TO NIGHT
-  gsap.to(
-    {},
-    {
-      scrollTrigger: {
-        trigger: ".achievements",
-        start: "25% top",
-
-        end: "bottom top",
-        scrub: true,
-        onUpdate: (self) => {
-          sun.style.opacity = 0.8 * (1 - self.progress) + 0.01 * self.progress;
-
-          moon.style.opacity = 0.85 * self.progress;
-          sunSet.style.opacity = 0.3 * (1 - self.progress);
-          sunDay.style.opacity = 0.25 * (1 - self.progress);
-          horizon.style.opacity = 0.99 * (1 - self.progress);
-          horizonNight.style.opacity = 0.8 * self.progress;
-        },
-        onLeave: (self) => {
-          if (textConclusion) {
-            textConclusion.visible = true;
-          }
-        },
-        onEnterBack: (self) => {
           if (textConclusion) textConclusion.visible = false;
         },
       },
     }
   );
 
-  // GET THE WATER BELOW SEA
+  // GET THE WATER APPEAR
   gsap.to(
     {},
     {
       scrollTrigger: {
-        trigger: ".sea__firstLayer",
-        start: "center bottom",
+        trigger: ".sea__thirdLayer",
+        start: "top top",
         end: "bottom top",
-        scrub: 0,
-        onEnter: (self) => {
+        scrub: true,
+        onEnter: () => {
           if (endingEnv) endingEnv.visible = true;
         },
-        onLeaveBack: (self) => {
+        onLeaveBack: () => {
           if (endingEnv) endingEnv.visible = false;
         },
         onUpdate: (self) => {
-          if (endingEnv) {
-            water.position.z = -520 * (1 - self.progress) - 480 * self.progress;
-          }
+          if (water)
+            water.material.uniforms["alpha"].value = Math.sin(
+              self.progress * (1.57 - 0.2)
+            );
         },
       },
     }
@@ -1357,37 +1378,62 @@ const gsapScroll = () => {
     },
     {
       scrollTrigger: {
-        trigger: ".sea__thirdLayer",
+        trigger: ".conclusion-rotation",
         scrub: 0,
-        start: "center top",
+        start: "top top",
         end: "bottom top",
+        onLeaveBack: () => {
+          if (sky) sky.material.uniforms["opacity"].value = 0;
+        },
+        onEnter: () => {
+          if (sky) sky.material.uniforms["opacity"].value = 0;
+        },
         onUpdate: (self) => {
           camera.rotation.x =
-            -Math.PI * 1.5 * (1 - self.progress) +
-            Math.PI * 0.05 * self.progress;
-          // camera.rotation.y =
-          //   -Math.PI * self.progress - (1 - self.progress) * (Math.PI * 1.2);
+            -Math.PI * 1.5 * (1 - self.progress ** 3) +
+            Math.PI * 0.05 * self.progress ** 3;
+          // LETS MAKE SKY APPEAR
+          if (self.progress >= 0.5 && sky) {
+            sky.material.uniforms["opacity"].value = 2 * (self.progress - 0.5);
+          }
         },
       },
-      x: 100,
+      x: 10,
       y: 5,
-      z: -400,
+      z: -200,
     }
   );
 
-  // MAKE THE SHIP MODEL APPEAR
+  // APPEAR THE JACK SHIP
   gsap.to(
     {},
     {
       scrollTrigger: {
-        trigger: ".conclusion",
-        start: "center bottom",
+        trigger: ".conclusion-rotation",
+        start: "center top",
         end: "bottom top",
-        onEnter: (self) => {
+        onEnter: () => {
           if (jackShip) jackShip.visible = true;
         },
-        onLeaveBack: (self) => {
+        onLeaveBack: () => {
           if (jackShip) jackShip.visible = false;
+        },
+      },
+    }
+  );
+
+  let contact = document.querySelector(".contact__final");
+  // SHOW CONTACT SECTION
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".contact__final",
+        start: "top center",
+        end: "top top",
+        scrub: 0,
+        onUpdate: (self) => {
+          contact.style.opacity = self.progress;
         },
       },
     }
