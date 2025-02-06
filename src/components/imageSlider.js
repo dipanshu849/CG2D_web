@@ -19,10 +19,6 @@ const slider = () => {
     imgContainer.style.transform = `translateX(0%)`;
   });
 
-  // sliderContainer.addEventListener("mouseenter", () => {
-  //   imgContainer.style.transition = "transform 0.5s ease-in-out";
-  // });
-
   sliderContainer.addEventListener("mousemove", (e) => {
     handleMove(e.offsetX);
   });

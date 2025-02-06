@@ -26,7 +26,7 @@
   stroke-width: 1;
   stroke-dasharray: 140;
   stroke-dashoffset: 140;
-  animation: outline 2s ease-in both;
+  /* animation: outline 2s ease-in both; */
 }
 
 @keyframes outline {

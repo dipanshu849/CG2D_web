@@ -11,7 +11,6 @@ import { RenderPass } from "three/examples/jsm/Addons.js";
 import { EffectComposer } from "three/examples/jsm/Addons.js";
 import { UnrealBloomPass } from "three/examples/jsm/Addons.js";
 import { RenderPixelatedPass } from "three/examples/jsm/Addons.js";
-import { GlitchPass } from "three/examples/jsm/Addons.js";
 
 import { LineMaterial } from "three/examples/jsm/Addons.js";
 import { LineGeometry } from "three/examples/jsm/Addons.js";
@@ -33,14 +32,16 @@ let object,
   originalPositions,
   originalPositionSphere;
 let dancingSphere;
-let glitchPass, effectComposer, pixelatedPass;
-let mixer, dancer;
+let effectComposer, pixelatedPass;
+// let mixer, dancer;
 let star, closeStar;
 let water, sky, endingEnv;
-let jackShip,
-  mixerShip,
-  actionShip,
-  turn = "left";
+// let jackShip,
+//   mixerShip,
+//   actionShip,
+//   turn = "left";
+
+// let resizingScaleValue = window.innerWidth / 1300;
 
 let textAbout,
   strokeGroup,
@@ -48,6 +49,8 @@ let textAbout,
   strokeMeshAbout,
   totalDistanceLetterAbout;
 let textFeatured, textProject, textConclusion;
+
+let loadingManager = new THREE.LoadingManager();
 
 const dLoader = new DRACOLoader();
 dLoader.setDecoderPath(
@@ -73,12 +76,15 @@ function loadFont(url) {
     loader.load(url, resolve, undefined, reject);
   });
 }
-const font = await loadFont("/Sarala_Regular.json");
+// const font = loadFont("/Sarala_Regular.json");
+async function initializeFont() {
+  const font = await loadFont("/Sarala_Regular.json");
+  // Use font here or pass it to other functions that need it
+  return font;
+}
 
 const Three = () => {
   const stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     75,
@@ -109,18 +115,12 @@ const Three = () => {
   // PASSES (AKA FILTERS)
   effectComposer = new EffectComposer(renderer);
   const rendererPass = new RenderPass(scene, camera);
-  glitchPass = new GlitchPass();
   pixelatedPass = new RenderPixelatedPass(
     window.devicePixelRatio,
     scene,
     camera
   );
-  // const outputPass = new OutputPass();
   effectComposer.addPass(rendererPass);
-  // effectComposer.addPass(glitchPass);
-  // const luminosityPass = new ShaderPass(LuminosityShader);
-  // effectComposer.addPass(luminosityPass);
-  // effectComposer.addPass(outputPass);
   effectComposer.setSize(window.innerWidth, window.innerHeight);
 
   const bloomPass = new UnrealBloomPass(
@@ -137,6 +137,30 @@ const Three = () => {
   // scene.add(axisHelper);
   // scene.add(gridHelper);
 
+  // LoadingManager
+  let percentageLoaded = document.querySelector(".loadingManager__percentage");
+  let loadingManagerContainer = document.querySelector(
+    ".loadingManager__container"
+  );
+  let heroTitle = document.querySelector(".hero__title path");
+  loadingManager.onProgress = (url, Loaded, total) => {
+    if (Loaded / total < 0.1)
+      percentageLoaded.textContent =
+        "00" + `${Math.trunc((Loaded / total) * 100)}`;
+    else if (0.1 <= Loaded / total < 0.99)
+      percentageLoaded.textContent =
+        "0" + `${Math.trunc((Loaded / total) * 100)}`;
+    else
+      percentageLoaded.textContent =
+        "0" + `${Math.trunc((Loaded / total) * 100)}`;
+  };
+  loadingManager.onLoad = () => {
+    loadingManagerContainer.style.display = "none";
+    document.body.style.overflow = "auto";
+    heroTitle.style.animation = "outline 2s ease-in both";
+    document.body.appendChild(stats.dom);
+  };
+
   // ADD STARS
   addStars();
 
@@ -150,7 +174,7 @@ const Three = () => {
   addPointModel();
   addDancingSphere();
   // addDomModel();
-  addShipModel();
+  // addShipModel();
 
   // ADD TEXT
   addAboutText();
@@ -162,46 +186,51 @@ const Three = () => {
   addEndingScene();
 
   //   AUTO RENDER
-  // window.scrollTo({ top: 0, behavior: "smooth" }); NOT WORKING!!!
   const clock = new THREE.Clock();
   function animate() {
     stats.update();
     let value = clock.getDelta();
-    if (uniforms.u_opacity.value > 0.0 || textConclusion.visible)
+    if (
+      uniforms.u_opacity.value > 0.0 ||
+      (textConclusion && textConclusion.visible)
+    )
       uniforms.u_time.value += value;
     if (water && endingEnv.visible) {
       water.material.uniforms["time"].value += value * 0.5;
     }
-    if (mixerShip && jackShip.visible) {
-      mixerShip.update(value);
+    // if (mixerShip && jackShip.visible) {
+    //   mixerShip.update(value);
 
-      // Cache values to avoid recalculation
-      const rotationSpeed = Math.cos(value) * 0.001;
-      const randomFactor = Math.random() * 0.1;
+    //   // Cache values to avoid recalculation
+    //   const rotationSpeed = Math.cos(value) * 0.001;
+    //   const randomFactor = Math.random() * 0.1;
 
-      if (turn === "left") {
-        jackShip.rotation.z -= rotationSpeed * Math.random();
-        if (jackShip.rotation.z <= -0.1 - randomFactor) {
-          turn = "right";
-        }
-      } else {
-        jackShip.rotation.z += rotationSpeed * Math.random();
-        if (jackShip.rotation.z >= 0.1 + randomFactor) {
-          turn = "left";
-        }
-      }
+    //   if (turn === "left") {
+    //     jackShip.rotation.z -= rotationSpeed * Math.random();
+    //     if (jackShip.rotation.z <= -0.1 - randomFactor) {
+    //       turn = "right";
+    //     }
+    //   } else {
+    //     jackShip.rotation.z += rotationSpeed * Math.random();
+    //     if (jackShip.rotation.z >= 0.1 + randomFactor) {
+    //       turn = "left";
+    //     }
+    //   }
 
-      jackShip.position.z += Math.sin(value);
-    }
+    //   jackShip.position.z += Math.sin(value);
+    // }
     // if (mixer && dancer.visible) mixer.update(value);
     effectComposer.render(0.1);
   }
-  window.addEventListener("resize", onWindowResize, true);
+  window.addEventListener("resize", onWindowResize);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
     effectComposer.setSize(window.innerWidth, window.innerHeight);
+
+    // resizingScaleValue = Math.min(Math.max(window.innerWidth / 1300, 1), 1); //
     animate();
   }
 
@@ -320,7 +349,7 @@ const addEyeEffect = () => {
 };
 
 const addPointModel = () => {
-  const loader = new GLTFLoader();
+  const loader = new GLTFLoader(loadingManager);
   loader.setDRACOLoader(dLoader);
   loader.load("/models/space_station_c.glb", (gltf) => {
     object = gltf.scene;
@@ -491,32 +520,32 @@ const addStars = () => {
 //   });
 // };
 
-const addShipModel = () => {
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(dLoader);
-  loader.load(
-    "/models/jack_ship_c.glb",
-    (gltf) => {
-      jackShip = gltf.scene;
-      jackShip.rotation.y = Math.PI * 1.2;
-      jackShip.position.y = -13;
-      jackShip.position.x = 5;
-      jackShip.position.z = 100;
-      jackShip.renderOrder = 2;
-      let animations = gltf.animations[0];
-      mixerShip = new THREE.AnimationMixer(jackShip);
-      actionShip = mixerShip.clipAction(animations);
-      actionShip.play();
-      endingEnv.add(jackShip);
-      jackShip.visible = false;
-    },
-    undefined,
-    undefined
-  );
-};
+// const addShipModel = () => {
+//   const loader = new GLTFLoader(loadingManager);
+//   loader.setDRACOLoader(dLoader);
+//   loader.load(
+//     "/models/jack_ship_c.glb",
+//     (gltf) => {
+//       jackShip = gltf.scene;
+//       jackShip.rotation.y = Math.PI * 1.2;
+//       jackShip.position.y = -13;
+//       jackShip.position.x = 5;
+//       jackShip.position.z = 100;
+//       jackShip.renderOrder = 2;
+//       let animations = gltf.animations[0];
+//       mixerShip = new THREE.AnimationMixer(jackShip);
+//       actionShip = mixerShip.clipAction(animations);
+//       actionShip.play();
+//       endingEnv.add(jackShip);
+//       jackShip.visible = false;
+//     },
+//     undefined,
+//     undefined
+//   );
+// };
 
 const addAboutText = () => {
-  async function doit() {
+  async function doit(font) {
     const geometry = new TextGeometry("About", {
       font: font,
       size: 1,
@@ -602,11 +631,13 @@ const addAboutText = () => {
     });
     scene.add(strokeGroup);
   }
-  doit();
+  initializeFont().then((font) => {
+    doit(font);
+  });
 };
 
 const addFeaturedText = () => {
-  async function doit() {
+  async function doit(font) {
     const geometry = new TextGeometry("Featured Project", {
       font: font,
       size: 1.4,
@@ -633,11 +664,13 @@ const addFeaturedText = () => {
     textFeatured.rotation.x = Math.PI / 2;
     scene.add(textFeatured);
   }
-  doit();
+  initializeFont().then((font) => {
+    doit(font);
+  });
 };
 
 const addProjectText = () => {
-  async function doit() {
+  async function doit(font) {
     const geometry = new TextGeometry("Projects", {
       font: font,
       size: 1.4,
@@ -665,11 +698,13 @@ const addProjectText = () => {
     textProject.visible = false;
     scene.add(textProject);
   }
-  doit();
+  initializeFont().then((font) => {
+    doit(font);
+  });
 };
 
 const addConclusionText = () => {
-  async function doit() {
+  async function doit(font) {
     const geometry = new TextGeometry("Conclusion", {
       font: font,
       size: 1.4,
@@ -711,7 +746,9 @@ const addConclusionText = () => {
     textConclusion.visible = false;
     scene.add(textConclusion);
   }
-  doit();
+  initializeFont().then((font) => {
+    doit(font);
+  });
 };
 
 const addEndingScene = () => {
@@ -1222,40 +1259,40 @@ const gsapScroll = () => {
     }
   );
 
-  // let achievements = document.querySelector(".achievements");
-  // // MOVE THE DANCER THE THE ACHIEVEMENTS SECTION
-  // gsap.to(
-  //   {},
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".model__container",
-  //       start: "top bottom",
-  //       end: "bottom top",
-  //       scrub: 0,
-  //       onEnter: () => {
-  //         if (dancer) dancer.visible = true;
-  //         achievements.style.pointerEvents = "all";
-  //       },
-  //       onEnterBack: () => {
-  //         if (dancer) dancer.visible = true;
-  //         achievements.style.pointerEvents = "all";
-  //       },
-  //       onLeave: () => {
-  //         if (dancer) dancer.visible = false;
-  //         achievements.style.pointerEvents = "none";
-  //       },
-  //       onLeaveBack: () => {
-  //         if (dancer) dancer.visible = false;
-  //         achievements.style.pointerEvents = "none";
-  //       },
-  //       onUpdate: (self) => {
-  //         if (dancer) {
-  //           dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
-  //         }
-  //       },
-  //     },
-  //   }
-  // );
+  let achievements = document.querySelector(".achievements");
+  // ENABEL POINTER EVENTS ACHIEVEMENTS SECTION
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".model__container",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0,
+        onEnter: () => {
+          // if (dancer) dancer.visible = true;
+          achievements.style.pointerEvents = "all";
+        },
+        onEnterBack: () => {
+          // if (dancer) dancer.visible = true;
+          achievements.style.pointerEvents = "all";
+        },
+        onLeave: () => {
+          // if (dancer) dancer.visible = false;
+          achievements.style.pointerEvents = "none";
+        },
+        onLeaveBack: () => {
+          // if (dancer) dancer.visible = false;
+          achievements.style.pointerEvents = "none";
+        },
+        onUpdate: (self) => {
+          // if (dancer) {
+          //   dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
+          // }
+        },
+      },
+    }
+  );
 
   // const sun = document.querySelector(".sun");
   // const sky = document.querySelector(".sky");
@@ -1405,22 +1442,22 @@ const gsapScroll = () => {
   );
 
   // APPEAR THE JACK SHIP
-  gsap.to(
-    {},
-    {
-      scrollTrigger: {
-        trigger: ".conclusion-rotation",
-        start: "center top",
-        end: "bottom top",
-        onEnter: () => {
-          if (jackShip) jackShip.visible = true;
-        },
-        onLeaveBack: () => {
-          if (jackShip) jackShip.visible = false;
-        },
-      },
-    }
-  );
+  // gsap.to(
+  //   {},
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".conclusion-rotation",
+  //       start: "center top",
+  //       end: "bottom top",
+  //       onEnter: () => {
+  //         if (jackShip) jackShip.visible = true;
+  //       },
+  //       onLeaveBack: () => {
+  //         if (jackShip) jackShip.visible = false;
+  //       },
+  //     },
+  //   }
+  // );
 
   let contact = document.querySelector(".contact__final");
   // SHOW CONTACT SECTION
@@ -1441,15 +1478,15 @@ const gsapScroll = () => {
 };
 
 // OPTION DROPPED [WILL NOT BE USED]
-const addWormHall = () => {
-  var cameraRotationProxyX = 3.14159;
-  var cameraRotationProxyY = 0;
+// const addWormHall = () => {
+//   var cameraRotationProxyX = 3.14159;
+//   var cameraRotationProxyY = 0;
 
-  // GETTING POSITIONS FOR POINTS
-  const geometry = new THREE.TubeGeometry(spline, 64, 1.8, 16, false);
-  const tubeVertex = geometry.attributes.position;
+//   // GETTING POSITIONS FOR POINTS
+//   const geometry = new THREE.TubeGeometry(spline, 64, 1.8, 16, false);
+//   const tubeVertex = geometry.attributes.position;
 
-  const pointGeometry = new THREE.BufferGeometry();
-};
+//   const pointGeometry = new THREE.BufferGeometry();
+// };
 
 export default Three;

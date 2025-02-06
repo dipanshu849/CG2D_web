@@ -1,5 +1,6 @@
 import "../styles/modern-normalize.css";
 import "../styles/style.css";
+// import "../styles/components/loading-manager.css";
 import "../styles/components/header.css";
 import "../styles/components/hero.css";
 import "../styles/components/hero-description.css";
@@ -19,11 +20,16 @@ import "../styles/utils.css";
 import "./vanilla-tilt.js";
 
 import Three from "./three/three";
-import oceanEffect from "./components/oceanEffect.js";
+// import oceanEffect from "./components/oceanEffect.js";
 import mobileNav from "./components/mobile-nav.js";
 // import ripple from "./components/ripple";
 import slider from "./components/imageSlider";
-Three();
-oceanEffect();
+import lazyLoading from "./components/lazy-loading.js";
+
+window.scrollTo({ top: 0, behavior: "smooth" }); // NOT WORKING!!!
+
+lazyLoading();
 slider();
 mobileNav();
+Three();
+// oceanEffect();

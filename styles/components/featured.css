@@ -52,7 +52,7 @@
 
 /* PARTS BELOW IT [IMAGE SLIDER] NEEDS IMPROVEMENT */
 .featured__img-container-main {
-  border: 2px solid green;
+  /* border: 2px solid green; */
   overflow: hidden;
   width: 100%;
 }
@@ -60,7 +60,7 @@
 .featured__img-wrapper-container {
   pointer-events: none;
   position: relative;
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
   display: flex;
   flex-wrap: nowrap;
   gap: 1rem;

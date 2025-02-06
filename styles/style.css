@@ -90,3 +90,31 @@ a {
 strong {
   color: var(--clr-indigo);
 }
+
+/* SCROLL BAR */
+/* For WebKit (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+  width: 8px;
+}
+
+html::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.3);
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--clr-rose);
+  outline: 1px solid var(--clr-rose);
+}
+
+/* Optional - Basic fallback for other browsers */
+html {
+  scrollbar-face-color: var(--clr-rose); /* Old Firefox */
+  scrollbar-track-color: rgba(0, 0, 0, 0.1); /* Old Firefox */
+  scrollbar-width: thin; /* Standardized */
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--clr-rose) rgba(0, 0, 0, 0.1);
+}

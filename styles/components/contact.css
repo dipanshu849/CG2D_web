@@ -106,6 +106,7 @@
 .inputBox textarea:valid + .text {
   transform: translateY(-100%) translateX(-2%);
   font-size: var(--size-xs);
+  color: var(--clr-rose);
 }
 
 .inputBox .line {

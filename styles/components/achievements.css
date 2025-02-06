@@ -1,5 +1,4 @@
 .achievements {
-  /* background-color: rgba(241, 245, 249, 0.9); */
   text-align: center;
   position: relative;
   pointer-events: none;
@@ -14,18 +13,12 @@
 }
 
 .achievements__container {
-  /* border: 2px solid red; */
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* background-color: rgba(241, 245, 249, 0.2); */
 }
 
 .medal__container {
-  /* border: 2px solid red;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem; */
   aspect-ratio: 0.8;
   width: min(50%, 300px);
   margin: 1rem auto;

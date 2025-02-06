@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <link
       href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
       rel="stylesheet"
@@ -12,9 +16,62 @@
       href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      body {
+        overflow: hidden;
+      }
+
+      .loadingManager__container {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        background-color: rgb(2, 6, 23);
+        color: rgb(241, 245, 249);
+        font-family: sans-serif;
+      }
+
+      .loadingManager {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .loadingManager__title {
+        font-size: 1.875rem;
+        /* 3xl */
+        writing-mode: vertical-lr;
+        text-orientation: upright;
+        color: inherit;
+      }
+
+      .loadingManager__progressBar {
+        width: 2px;
+        height: 70px;
+        border: 1px solid rgb(225, 29, 72);
+      }
+
+      .loadingManager__percentage {
+        font-size: 1.5rem;
+        /* 2xl */
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        transform: scale(1.2, 2);
+      }
+    </style>
     <title>Dev server</title>
   </head>
   <body>
+    <div class="loadingManager__container">
+      <div class="loadingManager">
+        <h2 class="loadingManager__title">LOADING</h2>
+        <div class="loadingManager__progressBar"></div>
+        <div class="loadingManager__percentage">000</div>
+      </div>
+    </div>
     <header class="header container">
       <nav class="header__nav">
         <ul class="header__menu">
@@ -227,20 +284,34 @@
         <div class="featured__img-container-main">
           <section class="featured__img-wrapper-container">
             <div class="featured__img-wrapper">
-              <img src="./featuredImages/start.png" alt="Start screen" />
-            </div>
-            <div class="featured__img-wrapper">
-              <img src="./featuredImages/tutorial.png" alt="Tutorial screen" />
+              <img
+                class="lazy loading"
+                src="https://fakeimg.pl/1920x1112"
+                data-src="./featuredImages/start.png"
+                alt="Start screen"
+              />
             </div>
             <div class="featured__img-wrapper">
               <img
-                src="./featuredImages/level.png"
+                class="lazy loading"
+                src="https://fakeimg.pl/1920x1112"
+                data-src="./featuredImages/tutorial.png"
+                alt="Tutorial screen"
+              />
+            </div>
+            <div class="featured__img-wrapper">
+              <img
+                class="lazy loading"
+                src="https://fakeimg.pl/1920x1112"
+                data-src="./featuredImages/level.png"
                 alt="Level selection screen"
               />
             </div>
             <div class="featured__img-wrapper">
               <img
-                src="./featuredImages/insideLevel.png"
+                class="lazy loading"
+                src="https://fakeimg.pl/1920x1112"
+                data-src="./featuredImages/insideLevel.png"
                 alt="Gameplay screen"
               />
             </div>
@@ -259,8 +330,9 @@
           <!-- Krish -->
           <section class="card left" style="--n: 1">
             <img
-              class="card__back-img"
-              src="/teamImages/dead forest.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/dead forest.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -356,8 +428,9 @@
           <!-- Dipanshu -->
           <section class="card left" style="--n: 2">
             <img
-              class="card__back-img"
-              src="/teamImages/throne room.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/throne room.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -453,8 +526,9 @@
           <!-- Satvik -->
           <section class="card left" style="--n: 3">
             <img
-              class="card__back-img"
-              src="/teamImages/castle.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/castle.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -538,37 +612,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -581,8 +624,9 @@
           <!-- Shashi -->
           <section class="card left" style="--n: 4">
             <img
-              class="card__back-img"
-              src="/teamImages/terrace.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/terrace.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -666,37 +710,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -709,8 +722,9 @@
           <!-- Rahul -->
           <section class="card left" style="--n: 5">
             <img
-              class="card__back-img"
-              src="/teamImages/dead forest.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/dead forest.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -794,37 +808,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -837,8 +820,9 @@
           <!-- Aditya -->
           <section class="card left" style="--n: 6">
             <img
-              class="card__back-img"
-              src="/teamImages/castle.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/castle.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -922,37 +906,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -966,8 +919,9 @@
           <!-- Krish -->
           <section class="card right" style="--n: 1">
             <img
-              class="card__back-img"
-              src="/teamImages/dead forest.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/dead forest.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1051,37 +1005,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -1094,8 +1017,9 @@
           <!-- Dipanshu -->
           <section class="card right" style="--n: 2">
             <img
-              class="card__back-img"
-              src="/teamImages/throne room.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/throne room.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1179,37 +1103,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -1222,8 +1115,9 @@
           <!-- Satvik -->
           <section class="card right" style="--n: 3">
             <img
-              class="card__back-img"
-              src="/teamImages/castle.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/castle.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1307,37 +1201,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -1350,8 +1213,9 @@
           <!-- Shashi -->
           <section class="card right" style="--n: 4">
             <img
-              class="card__back-img"
-              src="/teamImages/terrace.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/terrace.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1435,37 +1299,6 @@
                   <span class="skill-tag">UI/UX</span>
                 </div>
 
-                <!-- Social Links -->
-                <!-- <div class="social-links">
-                  <a href="#" class="social-btn insta">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 8 4 L 8 6 L 24 6 L 24 4 L 8 4 z M 24 6 L 24 8 L 26 8 L 26 6 L 24 6 z M 26 8 L 26 24 L 28 24 L 28 8 L 26 8 z M 26 24 L 24 24 L 24 26 L 26 26 L 26 24 z M 24 26 L 8 26 L 8 28 L 24 28 L 24 26 z M 8 26 L 8 24 L 6 24 L 6 26 L 8 26 z M 6 24 L 6 8 L 4 8 L 4 24 L 6 24 z M 6 8 L 8 8 L 8 6 L 6 6 L 6 8 z M 21 9 L 21 11 L 23 11 L 23 9 L 21 9 z M 13 11 L 13 13 L 19 13 L 19 11 L 13 11 z M 19 13 L 19 19 L 21 19 L 21 13 L 19 13 z M 19 19 L 13 19 L 13 21 L 19 21 L 19 19 z M 13 19 L 13 13 L 11 13 L 11 19 L 13 19 z"
-                      ></path>
-                    </svg>
-                  </a>
-                  <a href="#" class="social-btn facebook">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0px"
-                      y="0px"
-                      width="100"
-                      height="100"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        d="M 10 4 L 10 6 L 22 6 L 22 4 L 10 4 z M 22 6 L 22 8 L 24 8 L 24 6 L 22 6 z M 24 8 L 24 10 L 26 10 L 26 8 L 24 8 z M 26 10 L 26 22 L 28 22 L 28 10 L 26 10 z M 26 22 L 24 22 L 24 24 L 26 24 L 26 22 z M 24 24 L 22 24 L 22 26 L 24 26 L 24 24 z M 22 26 L 17 26 L 17 19 L 19 19 L 19 17 L 17 17 L 17 13 L 15 13 L 15 17 L 13 17 L 13 19 L 15 19 L 15 26 L 10 26 L 10 28 L 22 28 L 22 26 z M 10 26 L 10 24 L 8 24 L 8 26 L 10 26 z M 8 24 L 8 22 L 6 22 L 6 24 L 8 24 z M 6 22 L 6 10 L 4 10 L 4 22 L 6 22 z M 6 10 L 8 10 L 8 8 L 6 8 L 6 10 z M 8 8 L 10 8 L 10 6 L 8 6 L 8 8 z M 17 13 L 21 13 L 21 11 L 17 11 L 17 13 z"
-                      ></path>
-                    </svg>
-                </div> -->
-
                 <!-- Quick Actions -->
                 <div class="action-buttons">
                   <button class="view-projects">Projects</button>
@@ -1478,8 +1311,9 @@
           <!-- Rahul -->
           <section class="card right" style="--n: 5">
             <img
-              class="card__back-img"
-              src="/teamImages/dead forest.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/dead forest.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1575,8 +1409,9 @@
           <!-- Aditya -->
           <section class="card right" style="--n: 6">
             <img
-              class="card__back-img"
-              src="/teamImages/castle.png"
+              class="card__back-img lazy loading"
+              src="https://fakeimg.pl/3840x2160"
+              data-src="/teamImages/castle.png"
               alt="Background theme"
             />
             <h2 class="card__title">Core</h2>
@@ -1686,7 +1521,9 @@
             <h3 class="project__project-title">Souls And Beyond</h3>
             <div class="project__img-wrapper project__img1">
               <img
-                src="/projectImages/sab.png"
+                class="lazy loading"
+                src="https://fakeimg.pl/3554x2160"
+                data-src="/projectImages/sab.png"
                 alt="Image of game SOULS AND BEYOND"
               />
               <div class="project__img-content">
@@ -1780,7 +1617,9 @@
             <h3 class="project__project-title">Strike 42</h3>
             <div class="project__img-wrapper project__img2">
               <img
-                src="/projectImages/s42.jpeg"
+                class="lazy loading"
+                src="https://fakeimg.pl/1280x720"
+                data-src="/projectImages/s42.jpeg"
                 alt="Image of game Strike 42"
               />
               <div class="project__img-content">
