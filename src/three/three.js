@@ -174,15 +174,14 @@ const Three = () => {
   );
   let heroTitle = document.querySelector(".hero__title path");
   loadingManager.onProgress = (url, Loaded, total) => {
-    if (Loaded / total < 0.1)
-      percentageLoaded.textContent =
-        "00" + `${Math.trunc((Loaded / total) * 100)}`;
-    else if (0.1 <= Loaded / total < 0.99)
-      percentageLoaded.textContent =
-        "0" + `${Math.trunc((Loaded / total) * 100)}`;
-    else
+    // if (Loaded / total < 0.1)
+    //   percentageLoaded.textContent =
+    //     "00" + `${Math.trunc((Loaded / total) * 100)}`;
+    if (0.2 <= Loaded / total && Loaded / total < 0.9) {
       percentageLoaded.textContent =
         "0" + `${Math.trunc((Loaded / total) * 100)}`;
+    } else if (Loaded / total >= 0.99)
+      percentageLoaded.textContent = `${Math.trunc((Loaded / total) * 100)}`;
   };
   loadingManager.onLoad = () => {
     loadingManagerContainer.style.display = "none";
@@ -782,6 +781,7 @@ const addConclusionText = () => {
 };
 
 const addEndingScene = () => {
+  // const { Water, Sky } = await import("three/examples/jsm/Addons.js");
   endingEnv = new Group();
 
   // Water setup
