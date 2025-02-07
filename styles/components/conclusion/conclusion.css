@@ -35,31 +35,7 @@
   }
 }
 
-.sea__thirdLayer-ship {
-  border: 2px solid red;
-  position: absolute;
-  background: url("/svg/sailShipbg.svg") no-repeat;
-  /* transform-origin: center; */
-  top: -6%;
-  left: 50%;
-  transform-origin: center;
-  /* transform: rotate(190deg) translateX(50%); */
-  width: calc(var(--size-8xl) * 6);
-  aspect-ratio: 1;
-  /* object-fit: cover; */
-  object-fit: none;
-  z-index: -1;
-  /* animation: sinking 5s infinite alternate ease-in-out; */
-}
-
-@keyframes sinking {
-  0% {
-    transform: rotate(190deg) translateX(50%) skew(0deg);
-  }
-  100% {
-    transform: rotate(190deg) translateX(50%) skew(3deg);
-  }
-}
+/* */
 
 /* TEXT CONTENT */
 .conclusion {

@@ -1,6 +1,36 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { Quaternion } from "three";
+// import * as THREE from "three";
+import {
+  WebGLRenderer,
+  Scene,
+  PerspectiveCamera,
+  LoadingManager,
+  TextureLoader,
+  Vector2,
+  Group,
+  AmbientLight,
+  DirectionalLight,
+  Clock,
+  BufferAttribute,
+  SphereGeometry,
+  BufferGeometry,
+  Points,
+  PointsMaterial,
+  DynamicDrawUsage,
+  ShaderMaterial,
+  IcosahedronGeometry,
+  Mesh,
+  MathUtils,
+  MeshStandardMaterial,
+  InstancedMesh,
+  Object3D,
+  MeshPhysicalMaterial,
+  RepeatWrapping,
+  PlaneGeometry,
+  Vector3,
+  Color,
+} from "three";
+// import { OrbitControls } from "three/examples/jsm/Addons.js";
+// import { Quaternion } from "three";
 
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { DRACOLoader } from "three/examples/jsm/Addons.js";
@@ -21,7 +51,7 @@ import { Sky } from "three/examples/jsm/Addons.js";
 
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Stats from "three/examples/jsm/libs/stats.module.js";
+// import Stats from "three/examples/jsm/libs/stats.module.js";
 
 let camera;
 let cameraHolder;
@@ -50,7 +80,7 @@ let textAbout,
   totalDistanceLetterAbout;
 let textFeatured, textProject, textConclusion;
 
-let loadingManager = new THREE.LoadingManager();
+let loadingManager = new LoadingManager();
 
 const dLoader = new DRACOLoader();
 dLoader.setDecoderPath(
@@ -61,12 +91,12 @@ dLoader.setDecoderConfig({ type: "js" });
 const uniforms = {
   u_resolution: {
     type: "v2",
-    value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+    value: new Vector2(window.innerWidth, window.innerHeight),
   },
   u_time: { type: "f", value: 5.0 },
   u_opacity: { type: "f", value: 0.0 },
   u_texture: {
-    value: new THREE.TextureLoader().load("/effectImages/waternormals.jpg"),
+    value: new TextureLoader().load("/effectImages/waternormals.jpg"),
   },
 };
 
@@ -84,9 +114,9 @@ async function initializeFont() {
 }
 
 const Three = () => {
-  const stats = new Stats();
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(
+  // const stats = new Stats();
+  scene = new Scene();
+  camera = new PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.3,
@@ -94,20 +124,20 @@ const Three = () => {
   );
   camera.position.set(0, 0, -45);
 
-  cameraHolder = new THREE.Group();
+  cameraHolder = new Group();
   cameraHolder.add(camera);
   scene.add(cameraHolder);
 
   //   LIGHT
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
+  const ambientLight = new AmbientLight(0xffffff, 1.3);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  const directionalLight = new DirectionalLight(0xffffff, 1);
   directionalLight.position.set(500, 500, 500);
   scene.add(directionalLight);
 
   //   RENDERER
-  renderer = new THREE.WebGLRenderer();
+  renderer = new WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
@@ -124,7 +154,7 @@ const Three = () => {
   effectComposer.setSize(window.innerWidth, window.innerHeight);
 
   const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    new Vector2(window.innerWidth, window.innerHeight),
     0.75,
     0.1,
     0.1
@@ -132,8 +162,8 @@ const Three = () => {
   effectComposer.addPass(bloomPass);
 
   // GRID AND AXIS HELPER
-  const gridHelper = new THREE.GridHelper(200, 40);
-  const axisHelper = new THREE.AxesHelper(200);
+  // const gridHelper = new GridHelper(200, 40);
+  // const axisHelper = new AxesHelper(200);
   // scene.add(axisHelper);
   // scene.add(gridHelper);
 
@@ -158,7 +188,7 @@ const Three = () => {
     loadingManagerContainer.style.display = "none";
     document.body.style.overflow = "auto";
     heroTitle.style.animation = "outline 2s ease-in both";
-    document.body.appendChild(stats.dom);
+    // document.body.appendChild(stats.dom);
   };
 
   // ADD STARS
@@ -186,9 +216,9 @@ const Three = () => {
   addEndingScene();
 
   //   AUTO RENDER
-  const clock = new THREE.Clock();
+  const clock = new Clock();
   function animate() {
-    stats.update();
+    // stats.update();
     let value = clock.getDelta();
     if (
       uniforms.u_opacity.value > 0.0 ||
@@ -238,115 +268,115 @@ const Three = () => {
 };
 
 // I DON'T UNDERSTAND THIS FULLY
-const addEyeEffect = () => {
-  // Mouse and camera state tracking
-  let mouse = { x: 0, y: 0 };
-  let isAtTop = true;
-  let isTransitioning = false;
-  let effectEnabled = true;
-  let cameraStartQuaternion = new THREE.Quaternion();
-  const lookSensitivity = 0.0015;
-  const dampingFactor = 0.05;
-  const transitionDuration = 1.0; // seconds
-  let transitionStartTime = 0;
+// const addEyeEffect = () => {
+//   // Mouse and camera state tracking
+//   let mouse = { x: 0, y: 0 };
+//   let isAtTop = true;
+//   let isTransitioning = false;
+//   let effectEnabled = true;
+//   let cameraStartQuaternion = new Quaternion();
+//   const lookSensitivity = 0.0015;
+//   const dampingFactor = 0.05;
+//   const transitionDuration = 1.0; // seconds
+//   let transitionStartTime = 0;
 
-  // Track mouse movement
-  function onMouseMove(event) {
-    if (!effectEnabled) return;
+//   // Track mouse movement
+//   function onMouseMove(event) {
+//     if (!effectEnabled) return;
 
-    mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
-    mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
-  }
+//     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
+//     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
+//   }
 
-  // Handle scroll events
-  function onScroll() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const wasAtTop = isAtTop;
-    isAtTop = scrollTop < 10; // Small threshold for "at top"
+//   // Handle scroll events
+//   function onScroll() {
+//     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+//     const wasAtTop = isAtTop;
+//     isAtTop = scrollTop < 10; // Small threshold for "at top"
 
-    // Detect when we start scrolling away from top
-    if (wasAtTop && !isAtTop && effectEnabled) {
-      disableEffect();
-    }
-    // Detect when we return to top
-    else if (!wasAtTop && isAtTop && !effectEnabled) {
-      enableEffect();
-    }
-  }
+//     // Detect when we start scrolling away from top
+//     if (wasAtTop && !isAtTop && effectEnabled) {
+//       disableEffect();
+//     }
+//     // Detect when we return to top
+//     else if (!wasAtTop && isAtTop && !effectEnabled) {
+//       enableEffect();
+//     }
+//   }
 
-  function enableEffect() {
-    effectEnabled = true;
-    mouse.x = 0;
-    mouse.y = 0;
-  }
+//   function enableEffect() {
+//     effectEnabled = true;
+//     mouse.x = 0;
+//     mouse.y = 0;
+//   }
 
-  function disableEffect() {
-    effectEnabled = false;
-    isTransitioning = true;
-    transitionStartTime = performance.now();
-  }
+//   function disableEffect() {
+//     effectEnabled = false;
+//     isTransitioning = true;
+//     transitionStartTime = performance.now();
+//   }
 
-  // Add the look-around effect
-  function updateCameraLook() {
-    if (effectEnabled) {
-      // Store current camera state
-      cameraStartQuaternion.copy(camera.quaternion);
+//   // Add the look-around effect
+//   function updateCameraLook() {
+//     if (effectEnabled) {
+//       // Store current camera state
+//       cameraStartQuaternion.copy(camera.quaternion);
 
-      // Create look target
-      const lookTarget = new THREE.Vector3();
-      camera.getWorldPosition(lookTarget);
-      lookTarget.x += mouse.x;
-      lookTarget.y -= mouse.y;
-      lookTarget.z -= 1;
+//       // Create look target
+//       const lookTarget = new Vector3();
+//       camera.getWorldPosition(lookTarget);
+//       lookTarget.x += mouse.x;
+//       lookTarget.y -= mouse.y;
+//       lookTarget.z -= 1;
 
-      // Create temporary camera for look rotation
-      const tempCamera = camera.clone();
-      tempCamera.lookAt(lookTarget);
+//       // Create temporary camera for look rotation
+//       const tempCamera = camera.clone();
+//       tempCamera.lookAt(lookTarget);
 
-      // Smoothly interpolate to look rotation
-      camera.quaternion.slerpQuaternions(
-        cameraStartQuaternion,
-        tempCamera.quaternion,
-        dampingFactor
-      );
-    } else if (isTransitioning) {
-      // Handle transition back to neutral rotation
-      const elapsed = (performance.now() - transitionStartTime) / 1000;
-      const progress = Math.min(elapsed / transitionDuration, 1);
+//       // Smoothly interpolate to look rotation
+//       camera.quaternion.slerpQuaternions(
+//         cameraStartQuaternion,
+//         tempCamera.quaternion,
+//         dampingFactor
+//       );
+//     } else if (isTransitioning) {
+//       // Handle transition back to neutral rotation
+//       const elapsed = (performance.now() - transitionStartTime) / 1000;
+//       const progress = Math.min(elapsed / transitionDuration, 1);
 
-      // Create target quaternion (neutral rotation)
-      const targetQuaternion = new THREE.Quaternion();
-      const tempCamera = camera.clone();
-      tempCamera.rotation.set(0, 0, 0);
-      targetQuaternion.copy(tempCamera.quaternion);
+//       // Create target quaternion (neutral rotation)
+//       const targetQuaternion = new Quaternion();
+//       const tempCamera = camera.clone();
+//       tempCamera.rotation.set(0, 0, 0);
+//       targetQuaternion.copy(tempCamera.quaternion);
 
-      // Interpolate to neutral rotation
-      camera.quaternion.slerpQuaternions(
-        cameraStartQuaternion,
-        targetQuaternion,
-        progress
-      );
+//       // Interpolate to neutral rotation
+//       camera.quaternion.slerpQuaternions(
+//         cameraStartQuaternion,
+//         targetQuaternion,
+//         progress
+//       );
 
-      // Check if transition is complete
-      if (progress === 1) {
-        isTransitioning = false;
-      }
-    }
+//       // Check if transition is complete
+//       if (progress === 1) {
+//         isTransitioning = false;
+//       }
+//     }
 
-    requestAnimationFrame(updateCameraLook);
-  }
+//     requestAnimationFrame(updateCameraLook);
+//   }
 
-  // Cleanup when needed
-  function cleanup() {
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("scroll", onScroll);
-  }
+//   // Cleanup when needed
+//   function cleanup() {
+//     window.removeEventListener("mousemove", onMouseMove);
+//     window.removeEventListener("scroll", onScroll);
+//   }
 
-  // Setup
-  window.addEventListener("mousemove", onMouseMove);
-  window.addEventListener("scroll", onScroll);
-  updateCameraLook();
-};
+//   // Setup
+//   window.addEventListener("mousemove", onMouseMove);
+//   window.addEventListener("scroll", onScroll);
+//   updateCameraLook();
+// };
 
 const addPointModel = () => {
   const loader = new GLTFLoader(loadingManager);
@@ -380,12 +410,12 @@ const addPointModel = () => {
         offset += buffer.array.length;
       }
     });
-    return new THREE.BufferAttribute(combined, 3);
+    return new BufferAttribute(combined, 3);
   }
 
   function createTargetPosition(Positions) {
     const sphereRadius = 5; // Adjust based on your needs
-    const sphereGeometry = new THREE.SphereGeometry(
+    const sphereGeometry = new SphereGeometry(
       sphereRadius,
       32,
       32
@@ -407,20 +437,20 @@ const addPointModel = () => {
       );
       offset += 1;
     }
-    return new THREE.BufferAttribute(combined, 3);
+    return new BufferAttribute(combined, 3);
   }
 
   function createMesh(positions, targetPositions, scene, scale, x, y, z, c) {
-    const geometry = new THREE.BufferGeometry();
+    const geometry = new BufferGeometry();
     geometry.setAttribute("position", positions.clone());
     geometry.setAttribute("finalPosition", targetPositions.clone());
 
     // TO OPTIMIZE PERFORMANCE
-    geometry.attributes.position.setUsage(THREE.DynamicDrawUsage);
+    geometry.attributes.position.setUsage(DynamicDrawUsage);
 
-    const mesh = new THREE.Points(
+    const mesh = new Points(
       geometry,
-      new THREE.PointsMaterial({ size: 0.03, color: c })
+      new PointsMaterial({ size: 0.03, color: c })
     );
     mesh.scale.x = mesh.scale.y = mesh.scale.z = scale;
     mesh.position.x = x;
@@ -450,15 +480,15 @@ const addPointModel = () => {
 };
 
 const addDancingSphere = () => {
-  const mat = new THREE.ShaderMaterial({
+  const mat = new ShaderMaterial({
     wireframe: true,
     uniforms,
     transparent: true,
     vertexShader: document.getElementById("vertexshader").textContent,
     fragmentShader: document.getElementById("fragmentshader").textContent,
   });
-  const geo = new THREE.IcosahedronGeometry(15, 15);
-  dancingSphere = new THREE.Mesh(geo, mat);
+  const geo = new IcosahedronGeometry(15, 15);
+  dancingSphere = new Mesh(geo, mat);
   dancingSphere.visible = false;
   scene.add(dancingSphere);
 };
@@ -466,15 +496,15 @@ const addDancingSphere = () => {
 const addStars = () => {
   // FAR STARS
   let farStars = 200;
-  const geometry = new THREE.SphereGeometry(0.25, 8, 4);
-  const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  star = new THREE.InstancedMesh(geometry, material, farStars);
+  const geometry = new SphereGeometry(0.25, 8, 4);
+  const material = new MeshStandardMaterial({ color: 0xffffff });
+  star = new InstancedMesh(geometry, material, farStars);
   scene.add(star);
-  const dummyStar = new THREE.Object3D();
+  const dummyStar = new Object3D();
   for (let i = 0; i < farStars; i++) {
-    dummyStar.position.x = THREE.MathUtils.randFloatSpread(500);
-    dummyStar.position.y = THREE.MathUtils.randFloatSpread(500);
-    dummyStar.position.z = THREE.MathUtils.randFloatSpread(500);
+    dummyStar.position.x = MathUtils.randFloatSpread(500);
+    dummyStar.position.y = MathUtils.randFloatSpread(500);
+    dummyStar.position.z = MathUtils.randFloatSpread(500);
 
     dummyStar.updateMatrix();
 
@@ -483,20 +513,20 @@ const addStars = () => {
 
   // CLOSE STARS
   let closeStars = 200;
-  const closeStarGeometry = new THREE.SphereGeometry(0.1, 24, 12);
-  const closeStarMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  closeStar = new THREE.InstancedMesh(
+  const closeStarGeometry = new SphereGeometry(0.1, 24, 12);
+  const closeStarMaterial = new MeshStandardMaterial({ color: 0xffffff });
+  closeStar = new InstancedMesh(
     closeStarGeometry,
     closeStarMaterial,
     closeStars
   );
   scene.add(closeStar);
 
-  const closeDummyStar = new THREE.Object3D();
+  const closeDummyStar = new Object3D();
   for (let i = 0; i < closeStars; i++) {
-    closeDummyStar.position.x = THREE.MathUtils.randFloatSpread(100);
-    closeDummyStar.position.y = THREE.MathUtils.randFloatSpread(100);
-    closeDummyStar.position.z = THREE.MathUtils.randFloatSpread(100);
+    closeDummyStar.position.x = MathUtils.randFloatSpread(100);
+    closeDummyStar.position.y = MathUtils.randFloatSpread(100);
+    closeDummyStar.position.z = MathUtils.randFloatSpread(100);
 
     closeDummyStar.updateMatrix();
 
@@ -515,7 +545,7 @@ const addStars = () => {
 //     dancer.rotation.z = Math.PI;
 //     dancer.position.y = 6;
 //     dancer.visible = false;
-//     mixer = new THREE.AnimationMixer(dancer);
+//     mixer = new AnimationMixer(dancer);
 //     mixer.clipAction(gltf.animations[0]).play();
 //   });
 // };
@@ -533,7 +563,7 @@ const addStars = () => {
 //       jackShip.position.z = 100;
 //       jackShip.renderOrder = 2;
 //       let animations = gltf.animations[0];
-//       mixerShip = new THREE.AnimationMixer(jackShip);
+//       mixerShip = new AnimationMixer(jackShip);
 //       actionShip = mixerShip.clipAction(animations);
 //       actionShip.play();
 //       endingEnv.add(jackShip);
@@ -561,13 +591,13 @@ const addAboutText = () => {
     geometry.computeBoundingBox();
     const centerOffSet =
       -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = new MeshPhysicalMaterial({
       roughness: 0.5,
       transmission: 1,
       transparent: true,
       thickness: 1,
     });
-    textAbout = new THREE.Mesh(geometry, mat);
+    textAbout = new Mesh(geometry, mat);
     textAbout.rotation.x = Math.PI / 2;
     textAbout.rotation.z = -Math.PI;
     textAbout.position.x = centerOffSet - 1;
@@ -577,7 +607,7 @@ const addAboutText = () => {
     scene.add(textAbout);
 
     // LETS CREATE ANIMATION
-    strokeGroup = new THREE.Group();
+    strokeGroup = new Group();
 
     strokeGroup.userData.update = (t) => {
       strokeGroup.children.forEach((c) => {
@@ -652,14 +682,14 @@ const addFeaturedText = () => {
     });
 
     geometry.center();
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = new MeshPhysicalMaterial({
       roughness: 0.5,
       transmission: 0.98,
       transparent: true,
       thickness: 1,
       opacity: 0,
     });
-    textFeatured = new THREE.Mesh(geometry, mat);
+    textFeatured = new Mesh(geometry, mat);
     textFeatured.rotation.y = Math.PI;
     textFeatured.rotation.x = Math.PI / 2;
     scene.add(textFeatured);
@@ -685,14 +715,14 @@ const addProjectText = () => {
     });
 
     geometry.center();
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = new MeshPhysicalMaterial({
       roughness: 0.5,
       transmission: 0.8,
       transparent: true,
       thickness: 1,
       opacity: 0,
     });
-    textProject = new THREE.Mesh(geometry, mat);
+    textProject = new Mesh(geometry, mat);
     textProject.rotation.y = Math.PI;
     textProject.rotation.x = Math.PI / 2;
     textProject.visible = false;
@@ -718,7 +748,7 @@ const addConclusionText = () => {
     });
 
     geometry.center();
-    const mat = new THREE.ShaderMaterial({
+    const mat = new ShaderMaterial({
       uniforms,
       vertexShader: `
       varying vec2 vUv;
@@ -740,7 +770,7 @@ const addConclusionText = () => {
       `,
       // opacity: 0,
     });
-    textConclusion = new THREE.Mesh(geometry, mat);
+    textConclusion = new Mesh(geometry, mat);
     textConclusion.rotation.y = Math.PI;
     textConclusion.rotation.x = Math.PI / 2;
     textConclusion.visible = false;
@@ -752,20 +782,20 @@ const addConclusionText = () => {
 };
 
 const addEndingScene = () => {
-  endingEnv = new THREE.Group();
+  endingEnv = new Group();
 
   // Water setup
-  const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
-  const waterNormals = new THREE.TextureLoader().load(
+  const waterGeometry = new PlaneGeometry(1000, 1000);
+  const waterNormals = new TextureLoader().load(
     "/effectImages/waternormals.jpg"
   );
-  waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+  waterNormals.wrapS = waterNormals.wrapT = RepeatWrapping;
 
   water = new Water(waterGeometry, {
     textureWidth: 512,
     textureHeight: 512,
     waterNormals,
-    sunDirection: new THREE.Vector3(0, -1, 0), // Light from above
+    sunDirection: new Vector3(0, -1, 0), // Light from above
     sunColor: 0x3366ff, // Blue-tinted light
     waterColor: 0x001133, // Deeper blue color
     distortionScale: 3.7, // Increased distortion
@@ -801,11 +831,7 @@ const addEndingScene = () => {
   sky.material.uniforms["rayleigh"].value = 0.01;
   sky.material.uniforms["mieCoefficient"].value = 0.005;
   sky.material.uniforms["mieDirectionalG"].value = 0.8;
-  sky.material.uniforms["sunPosition"].value = new THREE.Vector3(
-    0,
-    1000,
-    -2000
-  );
+  sky.material.uniforms["sunPosition"].value = new Vector3(0, 1000, -2000);
 
   sky.position.y = 50;
   scene.add(endingEnv);
@@ -1249,7 +1275,7 @@ const gsapScroll = () => {
         end: "bottom top",
         onEnter: (self) => {
           if (textProject) textProject.visible = false;
-          if (scene) scene.background = new THREE.Color("#001633");
+          if (scene) scene.background = new Color("#001633");
         },
         onLeaveBack: (self) => {
           if (textProject) textProject.visible = true;
@@ -1483,10 +1509,10 @@ const gsapScroll = () => {
 //   var cameraRotationProxyY = 0;
 
 //   // GETTING POSITIONS FOR POINTS
-//   const geometry = new THREE.TubeGeometry(spline, 64, 1.8, 16, false);
+//   const geometry = new TubeGeometry(spline, 64, 1.8, 16, false);
 //   const tubeVertex = geometry.attributes.position;
 
-//   const pointGeometry = new THREE.BufferGeometry();
+//   const pointGeometry = new BufferGeometry();
 // };
 
 export default Three;

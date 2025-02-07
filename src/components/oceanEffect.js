@@ -1,6 +1,5 @@
 const oceanEffect = () => {
   const rays = document.querySelector(".sea__thirdLayer-moonRays");
-  const particles = document.querySelector(".sea__thirdLayer-particles");
 
   function updateMoonrays() {
     for (const child of rays.children) {
