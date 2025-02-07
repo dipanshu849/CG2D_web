@@ -24,6 +24,7 @@
 
 .medal__container {
   width: min(50%, 300px);
+  max-height: 375px;
   aspect-ratio: 0.8;
   margin: 1rem auto;
   position: relative;
@@ -45,7 +46,7 @@
 }
 
 .medal__svg {
-  width: calc(var(--size-10xl) * 0.8);
+  max-width: calc(var(--size-10xl) * 0.6);
   aspect-ratio: 1;
   transform: translateZ(5px);
 }
