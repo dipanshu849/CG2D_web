@@ -91,7 +91,13 @@ import "../styles/components/hero.css";
 import mobileNav from "./components/mobile-nav.js";
 mobileNav();
 
-window.scrollTo({ top: 0, behavior: "smooth" });
+// window.scrollTo({ top: 0, behavior: "smooth" });
+window.addEventListener("load", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "auto",
+  });
+});
 
 // Lazy load everything else
 document.addEventListener("DOMContentLoaded", () => {
@@ -117,6 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
   import("./three/three").then((module) => module.default());
   import("./components/imageSlider").then((module) => module.default());
   import("./components/oceanEffect").then((module) => module.default());
+
+  // history.scrollRestoration = 'manual';
+
+  // // Smooth scroll handler for other interactions
+  // const smoothScrollToTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: 'smooth'
+  //   });
+  // };
 
   // Utils
   import("./vanilla-tilt.js").catch(console.error);

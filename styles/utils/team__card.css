@@ -1,26 +1,24 @@
 :root {
-  --size-img: 1;
+  --size-img: 0.8;
 }
 
 .card {
-  margin: 1em 0;
+  margin: 1em 0 0 0;
   padding: 0 0.5em;
   /* border: 2px solid green; */
-  box-shadow: -12px 0 0 0 var(--clr-rose), 12px 0 0 0 var(--clr-rose),
-    0 -12px 0 0 var(--clr-rose), 0 12px 0 0 var(--clr-rose),
+  box-shadow: -10px 0 0 0 var(--clr-rose), 10px 0 0 0 var(--clr-rose),
+    0 -10px 0 0 var(--clr-rose), 0 10px 0 0 var(--clr-rose),
     -3.75px -7.5px 0 0 var(--clr-rose), -7.5px -3.75px 0 0 var(--clr-rose),
     3.75px 7.5px 0 0 var(--clr-rose), 7.5px 3.75px 0 0 var(--clr-rose),
     -3.75px 7.5px 0 0 var(--clr-rose), -7.5px 3.75px 0 0 var(--clr-rose),
     3.75px -7.5px 0 0 var(--clr-rose), 7.5px -3.75px 0 0 var(--clr-rose);
 
-  aspect-ratio: 1.35;
+  aspect-ratio: 1.8;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0;
   position: absolute;
-
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
 }
 
 .left {
@@ -62,7 +60,7 @@
 }
 
 .card__title {
-  font-size: var(--size-base);
+  font-size: var(--size-sm);
 }
 
 .card__middle {
@@ -81,15 +79,10 @@
 }
 
 .card__img {
-  /* position: absolute; */
-  /* border: 2px solid green; */
   image-rendering: pixelated;
   top: -3rem;
   left: -2rem;
-  /* inset: 0; */
   height: 100%;
-
-  /* height: calc(var(--size-img) * 2.5rem); */
 }
 
 .twelveStep {
@@ -112,7 +105,6 @@
 }
 
 .name {
-  /* margin: rem 0; */
   margin: 0.5rem 0;
   font-size: var(--size-sm);
 }
@@ -121,19 +113,19 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 0.3rem 0;
+  margin: 0.2rem 0;
   /* align-items: center; */
 }
 
 .progress__container label {
-  font-size: var(--size-sm);
+  font-size: var(--size-xs);
 }
 
 /* AI */
 .skills-tags {
   display: flex;
   gap: 0.5rem;
-  margin: 1rem 0.2rem 0.5rem 0;
+  margin: 0.5rem 0.1rem 0 0;
 }
 
 .skill-tag {
@@ -141,34 +133,14 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: var(--size-sm);
+  font-size: var(--size-xs);
 }
-
-/* .social-links {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-.social-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.3s;
-}
-
-.social-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-} */
 
 .action-buttons {
   display: flex;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .action-buttons button {
@@ -186,13 +158,13 @@
 }
 
 .view-projects {
-  font-size: var(--size-sm);
+  font-size: var(--size-xs);
   background: var(--clr-indigo);
   color: var(--clr-light);
 }
 
 .contact {
-  font-size: var(--size-sm);
+  font-size: var(--size-xs);
   background: rgba(255, 255, 255, 0.1);
   color: inherit;
 }
@@ -319,6 +291,61 @@
   .right {
     /* right: 300%; */
     transform: translateX(-250%);
+  }
+
+  :root {
+    --size-img: 1;
+  }
+
+  .card {
+    margin: 1em 0;
+    box-shadow: -12px 0 0 0 var(--clr-rose), 12px 0 0 0 var(--clr-rose),
+      0 -12px 0 0 var(--clr-rose), 0 12px 0 0 var(--clr-rose),
+      -3.75px -7.5px 0 0 var(--clr-rose), -7.5px -3.75px 0 0 var(--clr-rose),
+      3.75px 7.5px 0 0 var(--clr-rose), 7.5px 3.75px 0 0 var(--clr-rose),
+      -3.75px 7.5px 0 0 var(--clr-rose), -7.5px 3.75px 0 0 var(--clr-rose),
+      3.75px -7.5px 0 0 var(--clr-rose), 7.5px -3.75px 0 0 var(--clr-rose);
+
+    aspect-ratio: 1.5;
+    gap: 0.5rem;
+  }
+
+  .card__title {
+    font-size: var(--size-base);
+  }
+
+  .name {
+    font-size: var(--size-base);
+  }
+  .progress__container {
+    margin: 0.5rem 0;
+  }
+  .progress__container label {
+    font-size: var(--size-sm);
+  }
+  .skills-tags {
+    gap: 0.5rem;
+    margin: 1rem 0.5rem 0 0;
+  }
+  .skill-tag {
+    padding: 0.125rem 0.25rem;
+    font-size: var(--size-sm);
+  }
+
+  .action-buttons {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .action-buttons button {
+    padding: 0.5rem 0.15rem;
+  }
+  .view-projects {
+    font-size: var(--size-sm);
+  }
+
+  .contact {
+    font-size: var(--size-sm);
   }
 }
 
