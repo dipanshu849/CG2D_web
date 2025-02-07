@@ -185,7 +185,7 @@ const Three = () => {
   };
   loadingManager.onLoad = () => {
     loadingManagerContainer.style.display = "none";
-    document.body.style.overflow = "auto";
+    document.body.style.overflowY = "auto";
     heroTitle.style.animation = "outline 2s ease-in both";
     // document.body.appendChild(stats.dom);
   };

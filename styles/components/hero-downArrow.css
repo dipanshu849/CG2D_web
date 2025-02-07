@@ -1,7 +1,7 @@
 .hero__scroll-wrapper {
   /* border: 2px solid blue; */
   position: absolute;
-  bottom: -5%;
+  bottom: 0;
   width: 100%;
 }
 

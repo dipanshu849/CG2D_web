@@ -13,6 +13,7 @@
 
 .header__bars {
   display: block;
+  margin-right: 0.5rem;
   color: var(--clr-light);
   width: var(--size-2xl);
   height: var(--size-2xl);
