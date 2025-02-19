@@ -376,11 +376,15 @@ const addEyeEffect = () => {
   const dampingFactor = 0.05;
   let lastTouchX = 0;
   let lastTouchY = 0;
+  let startTouchX = 0;
+  let startTouchY = 0;
   let isTouching = false;
+  let initialTouch = false;
+  let isVerticalScroll = false;
 
   // Handle mouse movement
   function onMouseMove(event) {
-    if (!effectEnabled || isTouching) return; // Don't process mouse if touch is active
+    if (!effectEnabled || isTouching) return;
     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
   }
@@ -389,38 +393,61 @@ const addEyeEffect = () => {
   function onTouchStart(event) {
     if (!effectEnabled) return;
     isTouching = true;
-    lastTouchX = event.touches[0].clientX;
-    lastTouchY = event.touches[0].clientY;
+    initialTouch = true;
+    const touch = event.touches[0];
+    startTouchX = touch.clientX;
+    startTouchY = touch.clientY;
+    lastTouchX = startTouchX;
+    lastTouchY = startTouchY;
   }
 
   // Handle touch move
   function onTouchMove(event) {
     if (!effectEnabled) return;
-    event.preventDefault(); // Prevent scrolling while moving
+    const touch = event.touches[0];
+    const currentX = touch.clientX;
+    const currentY = touch.clientY;
 
-    const touchX = event.touches[0].clientX;
-    const touchY = event.touches[0].clientY;
+    if (initialTouch) {
+      const deltaXInitial = currentX - startTouchX;
+      const deltaYInitial = currentY - startTouchY;
+      // Determine scroll direction with threshold (adjust 5px as needed)
+      if (
+        Math.abs(deltaYInitial) > Math.abs(deltaXInitial) &&
+        Math.abs(deltaYInitial) > 5
+      ) {
+        isVerticalScroll = true;
+      } else {
+        isVerticalScroll = false;
+        event.preventDefault();
+      }
+      initialTouch = false;
+    }
 
-    // Calculate delta from last position
-    const deltaX = touchX - lastTouchX;
-    const deltaY = touchY - lastTouchY;
+    if (isVerticalScroll) return; // Allow default scrolling
 
-    // Update mouse position based on touch movement
-    mouse.x = deltaX * lookSensitivity + mouse.x;
-    mouse.y = deltaY * lookSensitivity + mouse.y;
+    event.preventDefault(); // Prevent default for camera movement
 
-    // Clamp values to prevent excessive rotation
+    const deltaX = currentX - lastTouchX;
+    const deltaY = currentY - lastTouchY;
+
+    // Update mouse position
+    mouse.x += deltaX * lookSensitivity;
+    mouse.y += deltaY * lookSensitivity;
+
+    // Clamp values
     mouse.x = Math.max(Math.min(mouse.x, 0.5), -0.5);
     mouse.y = Math.max(Math.min(mouse.y, 0.5), -0.5);
 
-    lastTouchX = touchX;
-    lastTouchY = touchY;
+    lastTouchX = currentX;
+    lastTouchY = currentY;
   }
 
   // Handle touch end
   function onTouchEnd() {
     isTouching = false;
-    // Optionally reset mouse position gradually
+    initialTouch = false;
+    isVerticalScroll = false;
     gsap.to(mouse, {
       x: 0,
       y: 0,
@@ -485,7 +512,6 @@ const addEyeEffect = () => {
     requestAnimationFrame(updateCameraLook);
   }
 
-  // Cleanup function
   function cleanup() {
     window.removeEventListener("mousemove", onMouseMove);
     window.removeEventListener("touchstart", onTouchStart);
@@ -502,6 +528,142 @@ const addEyeEffect = () => {
 
   return cleanup;
 };
+
+// const addEyeEffect = () => {
+//   let mouse = { x: 0, y: 0 };
+//   let isAtTop = true;
+//   let effectEnabled = true;
+//   let cameraStartQuaternion = new Quaternion();
+//   const lookSensitivity = 0.0015;
+//   const dampingFactor = 0.05;
+//   let lastTouchX = 0;
+//   let lastTouchY = 0;
+//   let isTouching = false;
+
+//   // Handle mouse movement
+//   function onMouseMove(event) {
+//     if (!effectEnabled || isTouching) return; // Don't process mouse if touch is active
+//     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
+//     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
+//   }
+
+//   // Handle touch start
+//   function onTouchStart(event) {
+//     if (!effectEnabled) return;
+//     isTouching = true;
+//     lastTouchX = event.touches[0].clientX;
+//     lastTouchY = event.touches[0].clientY;
+//   }
+
+//   // Handle touch move
+//   function onTouchMove(event) {
+//     if (!effectEnabled) return;
+//     event.preventDefault(); // Prevent scrolling while moving
+
+//     const touchX = event.touches[0].clientX;
+//     const touchY = event.touches[0].clientY;
+
+//     // Calculate delta from last position
+//     const deltaX = touchX - lastTouchX;
+//     const deltaY = touchY - lastTouchY;
+
+//     // Update mouse position based on touch movement
+//     mouse.x = deltaX * lookSensitivity + mouse.x;
+//     mouse.y = deltaY * lookSensitivity + mouse.y;
+
+//     // Clamp values to prevent excessive rotation
+//     mouse.x = Math.max(Math.min(mouse.x, 0.5), -0.5);
+//     mouse.y = Math.max(Math.min(mouse.y, 0.5), -0.5);
+
+//     lastTouchX = touchX;
+//     lastTouchY = touchY;
+//   }
+
+//   // Handle touch end
+//   function onTouchEnd() {
+//     isTouching = false;
+//     // Optionally reset mouse position gradually
+//     gsap.to(mouse, {
+//       x: 0,
+//       y: 0,
+//       duration: 0.5,
+//       ease: "power2.out",
+//     });
+//   }
+
+//   // Create neutral quaternion for target
+//   const neutralQuaternion = new Quaternion();
+//   const tempCamera = camera.clone();
+//   tempCamera.rotation.set(0, 0, 0);
+//   neutralQuaternion.copy(tempCamera.quaternion);
+
+//   // GSAP animation for camera transition
+//   gsap.to(
+//     {},
+//     {
+//       scrollTrigger: {
+//         trigger: ".hero", // Replace with your section's class
+//         start: "top top",
+//         end: "80% top", // Adjust this to control transition length
+//         scrub: true,
+//         onEnter: () => {
+//           effectEnabled = false;
+//         },
+//         onLeaveBack: () => {
+//           effectEnabled = true;
+//         },
+//         onUpdate: (self) => {
+//           if (!effectEnabled) {
+//             camera.quaternion.slerpQuaternions(
+//               cameraStartQuaternion,
+//               neutralQuaternion,
+//               self.progress
+//             );
+//           }
+//         },
+//       },
+//     }
+//   );
+
+//   function updateCameraLook() {
+//     if (effectEnabled) {
+//       cameraStartQuaternion.copy(camera.quaternion);
+
+//       const lookTarget = new Vector3();
+//       camera.getWorldPosition(lookTarget);
+//       lookTarget.x += mouse.x;
+//       lookTarget.y -= mouse.y;
+//       lookTarget.z -= 1;
+
+//       const tempCamera = camera.clone();
+//       tempCamera.lookAt(lookTarget);
+
+//       camera.quaternion.slerpQuaternions(
+//         cameraStartQuaternion,
+//         tempCamera.quaternion,
+//         dampingFactor
+//       );
+//     }
+//     requestAnimationFrame(updateCameraLook);
+//   }
+
+//   // Cleanup function
+//   function cleanup() {
+//     window.removeEventListener("mousemove", onMouseMove);
+//     window.removeEventListener("touchstart", onTouchStart);
+//     window.removeEventListener("touchmove", onTouchMove);
+//     window.removeEventListener("touchend", onTouchEnd);
+//   }
+
+//   // Setup event listeners
+//   window.addEventListener("mousemove", onMouseMove);
+//   window.addEventListener("touchstart", onTouchStart);
+//   window.addEventListener("touchmove", onTouchMove, { passive: false });
+//   window.addEventListener("touchend", onTouchEnd);
+//   updateCameraLook();
+
+//   return cleanup;
+// };
 
 const addPointModel = () => {
   const loader = new GLTFLoader(loadingManager);
