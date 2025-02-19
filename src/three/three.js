@@ -8,7 +8,6 @@ import {
   Vector2,
   Group,
   AmbientLight,
-  DirectionalLight,
   Clock,
   BufferAttribute,
   SphereGeometry,
@@ -112,13 +111,12 @@ async function initializeFont() {
   // Use font here or pass it to other functions that need it
   return font;
 }
-let currentPixelSize = window.devicePixelRatio;
+let currentPixelSize = Math.min(window.devicePixelRatio, 2);
 const resetPixelation = () => {
-  pixelatedPass.setPixelSize(window.devicePixelRatio);
-  currentPixelSize = window.devicePixelRatio;
+  pixelatedPass.setPixelSize(Math.min(window.devicePixelRatio, 2));
+  currentPixelSize = Math.min(window.devicePixelRatio, 2);
   if (effectComposer.passes.includes(pixelatedPass)) {
     effectComposer.removePass(pixelatedPass);
-    // console.log("HERE");
   }
 };
 
@@ -150,9 +148,9 @@ const Three = () => {
   const ambientLight = new AmbientLight(0xffffff, 1.3);
   scene.add(ambientLight);
 
-  const directionalLight = new DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(500, 500, 500);
-  scene.add(directionalLight);
+  // const directionalLight = new DirectionalLight(0xffffff, 1);
+  // directionalLight.position.set(500, 500, 500);
+  // scene.add(directionalLight);
 
   // const pointLight = new PointLight(0xffffff, 5, 0, 0);
   // scene.add(pointLight);
@@ -167,11 +165,11 @@ const Three = () => {
   effectComposer = new EffectComposer(renderer);
   const rendererPass = new RenderPass(scene, camera);
   pixelatedPass = new RenderPixelatedPass(
-    window.devicePixelRatio,
+    Math.min(window.devicePixelRatio, 2),
     scene,
     camera
   );
-  pixelatedPass.setPixelSize(window.devicePixelRatio);
+  pixelatedPass.setPixelSize(Math.min(window.devicePixelRatio, 2));
   // resetPixelation();
 
   const bloomPass = new UnrealBloomPass(
@@ -240,7 +238,6 @@ const Three = () => {
   //   AUTO RENDER
   const clock = new Clock();
   function animate() {
-    // stats.update();
     let value = clock.getDelta();
     if (
       uniforms.u_opacity.value > 0.0 ||
@@ -250,28 +247,6 @@ const Three = () => {
     if (water && endingEnv.visible) {
       water.material.uniforms["time"].value += value * 0.5;
     }
-    // if (mixerShip && jackShip.visible) {
-    //   mixerShip.update(value);
-
-    //   // Cache values to avoid recalculation
-    //   const rotationSpeed = Math.cos(value) * 0.001;
-    //   const randomFactor = Math.random() * 0.1;
-
-    //   if (turn === "left") {
-    //     jackShip.rotation.z -= rotationSpeed * Math.random();
-    //     if (jackShip.rotation.z <= -0.1 - randomFactor) {
-    //       turn = "right";
-    //     }
-    //   } else {
-    //     jackShip.rotation.z += rotationSpeed * Math.random();
-    //     if (jackShip.rotation.z >= 0.1 + randomFactor) {
-    //       turn = "left";
-    //     }
-    //   }
-
-    //   jackShip.position.z += Math.sin(value);
-    // }
-    // if (mixer && dancer.visible) mixer.update(value);
     effectComposer.render(0.1);
   }
   window.addEventListener("resize", onWindowResize);
@@ -285,7 +260,6 @@ const Three = () => {
     effectComposer.setSize(window.innerWidth, window.innerHeight);
     effectComposer.render(0.1);
 
-    // resizingScaleValue = Math.min(Math.max(window.innerWidth / 1300, 1), 1); //
     animate();
   }
 
@@ -831,6 +805,8 @@ const addStars = () => {
 
     closeStar.setMatrixAt(i, closeDummyStar.matrix);
   }
+  star.matrixAutoUpdate = false;
+  closeStar.matrixAutoUpdate = false;
 };
 
 // const addDomModel = () => {
@@ -904,6 +880,7 @@ const addAboutText = () => {
     textAbout.position.z = 10;
 
     scene.add(textAbout);
+    // textAbout.matrixAutoUpdate = false;
 
     // LETS CREATE ANIMATION
     strokeGroup = new Group();
@@ -1024,7 +1001,6 @@ const addProjectText = () => {
     textProject = new Mesh(geometry, mat);
     textProject.rotation.y = Math.PI;
     textProject.rotation.x = Math.PI / 2;
-    // textProject.material.opacity = 0;
     textProject.visible = false;
     scene.add(textProject);
   }
@@ -1082,7 +1058,6 @@ const addConclusionText = () => {
 };
 
 const addEndingScene = () => {
-  // const { Water, Sky } = await import("three/examples/jsm/Addons.js");
   endingEnv = new Group();
 
   // Water setup
@@ -1093,8 +1068,6 @@ const addEndingScene = () => {
   waterNormals.wrapS = waterNormals.wrapT = RepeatWrapping;
 
   water = new Water(waterGeometry, {
-    textureWidth: 512,
-    textureHeight: 512,
     waterNormals,
     sunDirection: new Vector3(0, -1, 0), // Light from above
     sunColor: 0x3366ff, // Blue-tinted light
@@ -1109,7 +1082,7 @@ const addEndingScene = () => {
   endingEnv.add(water);
 
   sky = new Sky();
-  sky.scale.setScalar(10000);
+  sky.scale.setScalar(1000);
   endingEnv.add(sky);
 
   sky.material.uniforms.opacity = { type: "f", value: 0.0 };
@@ -1493,8 +1466,8 @@ const gsapScroll = () => {
         endTrigger: ".team",
         end: "bottom top",
         onEnter: () => {
-          pixelatedPass.setPixelSize(window.devicePixelRatio);
-          currentPixelSize = window.devicePixelRatio;
+          pixelatedPass.setPixelSize(Math.min(window.devicePixelRatio, 2));
+          currentPixelSize = Math.min(window.devicePixelRatio, 2);
 
           if (textProject) textProject.visible = true;
           if (dancingSphere) {
@@ -1512,9 +1485,7 @@ const gsapScroll = () => {
                   end: "30% top",
                   onEnterBack: () => {
                     dancingSphere.visible = true;
-                    // effectComposer.removePass(pixelatedPass);
                     resetPixelation();
-                    // uniforms.u_opacity.value = 0.01;
                   },
                 },
                 value: 0,
@@ -1534,7 +1505,7 @@ const gsapScroll = () => {
           if (effectComposer.passes.includes(pixelatedPass)) {
             const easedProgress = gsap.parseEase("power2.inOut")(self.progress);
             currentPixelSize =
-              easedProgress ** 2 * 200 + window.devicePixelRatio;
+              easedProgress ** 2 * 100 + Math.min(window.devicePixelRatio, 2);
             pixelatedPass.setPixelSize(currentPixelSize);
           }
           if (textFeatured) {
@@ -1583,15 +1554,11 @@ const gsapScroll = () => {
         start: "top top",
         end: "80% top",
         onLeave: () => {
-          // effectComposer.removePass(pixelatedPass);
-          // if (textFeatured) textFeatured.visible = false;
           resetPixelation();
           if (textFeatured) {
             textFeatured.material.opacity = 1; // Reset to default
             textFeatured.visible = false;
           }
-          // pixelatedPass.setPixelSize(window.devicePixelRatio);
-          // effectComposer.removePass(pixelatedPass);
         },
         onEnterBack: () => {
           if (!effectComposer.passes.includes(pixelatedPass)) {
@@ -1602,11 +1569,12 @@ const gsapScroll = () => {
         onUpdate: (self) => {
           if (pixelatedPass) {
             pixelatedPass.setPixelSize(
-              (200 + window.devicePixelRatio) * (1 - self.progress) + 1
+              (100 + Math.min(window.devicePixelRatio, 2)) *
+                (1 - self.progress) +
+                1
             );
           }
         },
-        // onScrubComplete: resetPixelation,
       },
     }
   );

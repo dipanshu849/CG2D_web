@@ -12,7 +12,7 @@
     3.75px 7.5px 0 0 var(--clr-rose), 7.5px 3.75px 0 0 var(--clr-rose),
     -3.75px 7.5px 0 0 var(--clr-rose), -7.5px 3.75px 0 0 var(--clr-rose),
     3.75px -7.5px 0 0 var(--clr-rose), 7.5px -3.75px 0 0 var(--clr-rose);
-
+  transition: box-shadow 0.3s;
   aspect-ratio: 1.8;
   display: flex;
   flex-direction: column;
@@ -33,8 +33,20 @@
   animation-delay: calc(30s / var(--items) * (var(--items) - var(--n)) * -1);
 }
 
+.team__20-21:hover .card,
+.team__22:hover .card,
 .team__23:hover .card {
   animation-play-state: paused;
+}
+
+.card:hover {
+  box-shadow: -10px 0 0 0 var(--clr-slate600), 10px 0 0 0 var(--clr-slate600),
+    0 -10px 0 0 var(--clr-slate600), 0 10px 0 0 var(--clr-slate600),
+    -3.75px -7.5px 0 0 var(--clr-slate600),
+    -7.5px -3.75px 0 0 var(--clr-slate600), 3.75px 7.5px 0 0 var(--clr-slate600),
+    7.5px 3.75px 0 0 var(--clr-slate600), -3.75px 7.5px 0 0 var(--clr-slate600),
+    -7.5px 3.75px 0 0 var(--clr-slate600), 3.75px -7.5px 0 0 var(--clr-slate600),
+    7.5px -3.75px 0 0 var(--clr-slate600);
 }
 
 @keyframes scrollRight {
@@ -94,6 +106,12 @@
   max-width: 1800%;
   animation: walking 1.2s steps(18) infinite;
 }
+
+.twentyfourStep {
+  max-width: 2400%;
+  animation: walking 1.2s steps(24) infinite;
+}
+
 .card__stats-container {
   flex: 1;
 }

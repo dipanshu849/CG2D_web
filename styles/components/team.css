@@ -13,6 +13,22 @@
   margin: 1rem auto;
 }
 
+.teamContainer {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.teamContainer__title {
+  color: var(--clr-indigo);
+  font-size: var(--size-sm);
+  font-weight: 600;
+}
+
+.team__20-21,
+.team__22,
 .team__23 {
   /* display: flex;
   gap: 1rem; */
@@ -32,6 +48,10 @@
   .team__description {
     font-size: var(--size-base);
     margin: 1.5rem auto;
+  }
+
+  .teamContainer__title {
+    font-size: var(--size-base);
   }
 }
 
@@ -55,6 +75,10 @@
   .team__description {
     font-size: var(--size-lg);
   }
+
+  .teamContainer__title {
+    font-size: var(--size-xl);
+  }
 }
 
 /* xl */
@@ -66,6 +90,10 @@
   .team__description {
     font-size: var(--size-xl);
     margin: 2rem auto;
+  }
+
+  .teamContainer__title {
+    font-size: var(--size-2xl);
   }
 }
 
