@@ -53,7 +53,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 // import Stats from "three/examples/jsm/libs/stats.module.js";
 
-let camera;
+let camera, cameraFov;
 let cameraHolder;
 let scene;
 let renderer;
@@ -122,15 +122,24 @@ const resetPixelation = () => {
   }
 };
 
+const setCameraFov = () => {
+  return (
+    96 - ((Math.max(Math.min(1920, window.innerWidth), 320) - 320) * 21) / 1600
+  );
+};
+
 const Three = () => {
   // const stats = new Stats();
   scene = new Scene();
+  cameraFov = setCameraFov();
+  console.log(cameraFov);
   camera = new PerspectiveCamera(
-    75,
+    cameraFov,
     window.innerWidth / window.innerHeight,
     0.3,
     1000
   );
+  // console.log(window.innerWidth);
   camera.position.set(0, 0, -45);
 
   cameraHolder = new Group();
@@ -151,7 +160,7 @@ const Three = () => {
   //   RENDERER
   renderer = new WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   document.body.appendChild(renderer.domElement);
 
   // PASSES (AKA FILTERS)
@@ -268,10 +277,13 @@ const Three = () => {
   window.addEventListener("resize", onWindowResize);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
+    console.log(setCameraFov());
+    camera.fov = setCameraFov();
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     effectComposer.setSize(window.innerWidth, window.innerHeight);
+    effectComposer.render(0.1);
 
     // resizingScaleValue = Math.min(Math.max(window.innerWidth / 1300, 1), 1); //
     animate();
@@ -888,7 +900,7 @@ const addAboutText = () => {
     textAbout.rotation.x = Math.PI / 2;
     textAbout.rotation.z = -Math.PI;
     textAbout.position.x = centerOffSet - 1;
-    textAbout.position.y = 10;
+    textAbout.position.y = 11;
     textAbout.position.z = 10;
 
     scene.add(textAbout);
@@ -905,7 +917,7 @@ const addAboutText = () => {
     strokeGroup.rotation.x = Math.PI / 2;
     strokeGroup.rotation.z = -Math.PI;
     strokeGroup.position.x = centerOffSet - 1;
-    strokeGroup.position.y = 10 - 0.15;
+    strokeGroup.position.y = 11 - 0.15;
     strokeGroup.position.z = 10;
     lineMaterialAbout = new LineMaterial({
       color: 0x94a3b8,
