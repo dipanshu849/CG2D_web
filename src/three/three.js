@@ -30,7 +30,7 @@ import {
   Color,
 } from "three";
 // import { OrbitControls } from "three/examples/jsm/Addons.js";
-// import { Quaternion } from "three";
+import { Quaternion } from "three";
 
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { DRACOLoader } from "three/examples/jsm/Addons.js";
@@ -112,6 +112,15 @@ async function initializeFont() {
   // Use font here or pass it to other functions that need it
   return font;
 }
+let currentPixelSize = window.devicePixelRatio;
+const resetPixelation = () => {
+  pixelatedPass.setPixelSize(window.devicePixelRatio);
+  currentPixelSize = window.devicePixelRatio;
+  if (effectComposer.passes.includes(pixelatedPass)) {
+    effectComposer.removePass(pixelatedPass);
+    // console.log("HERE");
+  }
+};
 
 const Three = () => {
   // const stats = new Stats();
@@ -136,6 +145,9 @@ const Three = () => {
   directionalLight.position.set(500, 500, 500);
   scene.add(directionalLight);
 
+  // const pointLight = new PointLight(0xffffff, 5, 0, 0);
+  // scene.add(pointLight);
+
   //   RENDERER
   renderer = new WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -150,8 +162,8 @@ const Three = () => {
     scene,
     camera
   );
-  effectComposer.addPass(rendererPass);
-  effectComposer.setSize(window.innerWidth, window.innerHeight);
+  pixelatedPass.setPixelSize(window.devicePixelRatio);
+  // resetPixelation();
 
   const bloomPass = new UnrealBloomPass(
     new Vector2(window.innerWidth, window.innerHeight),
@@ -159,7 +171,9 @@ const Three = () => {
     0.1,
     0.1
   );
+  effectComposer.addPass(rendererPass);
   effectComposer.addPass(bloomPass);
+  effectComposer.setSize(window.innerWidth, window.innerHeight);
 
   // GRID AND AXIS HELPER
   // const gridHelper = new GridHelper(200, 40);
@@ -197,7 +211,7 @@ const Three = () => {
   gsapScroll();
 
   // ADD EYE EFFECT
-  // addEyeEffect();
+  addEyeEffect();
 
   // ADD MODELS
   addPointModel();
@@ -268,54 +282,53 @@ const Three = () => {
 
 // I DON'T UNDERSTAND THIS FULLY
 // const addEyeEffect = () => {
-//   // Mouse and camera state tracking
 //   let mouse = { x: 0, y: 0 };
 //   let isAtTop = true;
-//   let isTransitioning = false;
 //   let effectEnabled = true;
 //   let cameraStartQuaternion = new Quaternion();
 //   const lookSensitivity = 0.0015;
 //   const dampingFactor = 0.05;
-//   const transitionDuration = 1.0; // seconds
-//   let transitionStartTime = 0;
 
-//   // Track mouse movement
 //   function onMouseMove(event) {
 //     if (!effectEnabled) return;
-
 //     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
 //     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
 //   }
 
-//   // Handle scroll events
-//   function onScroll() {
-//     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-//     const wasAtTop = isAtTop;
-//     isAtTop = scrollTop < 10; // Small threshold for "at top"
+//   // Create a neutral quaternion for target
+//   const neutralQuaternion = new Quaternion();
+//   const tempCamera = camera.clone();
+//   tempCamera.rotation.set(0, 0, 0);
+//   neutralQuaternion.copy(tempCamera.quaternion);
 
-//     // Detect when we start scrolling away from top
-//     if (wasAtTop && !isAtTop && effectEnabled) {
-//       disableEffect();
+//   // Create GSAP animation for camera transition
+//   gsap.to(
+//     {},
+//     {
+//       scrollTrigger: {
+//         trigger: ".hero", // Replace with your section's class
+//         start: "top top",
+//         end: "80% top", // Adjust this to control transition length
+//         scrub: true,
+//         onEnter: () => {
+//           effectEnabled = false;
+//         },
+//         onLeaveBack: () => {
+//           effectEnabled = true;
+//         },
+//         onUpdate: (self) => {
+//           if (!effectEnabled) {
+//             camera.quaternion.slerpQuaternions(
+//               cameraStartQuaternion,
+//               neutralQuaternion,
+//               self.progress
+//             );
+//           }
+//         },
+//       },
 //     }
-//     // Detect when we return to top
-//     else if (!wasAtTop && isAtTop && !effectEnabled) {
-//       enableEffect();
-//     }
-//   }
+//   );
 
-//   function enableEffect() {
-//     effectEnabled = true;
-//     mouse.x = 0;
-//     mouse.y = 0;
-//   }
-
-//   function disableEffect() {
-//     effectEnabled = false;
-//     isTransitioning = true;
-//     transitionStartTime = performance.now();
-//   }
-
-//   // Add the look-around effect
 //   function updateCameraLook() {
 //     if (effectEnabled) {
 //       // Store current camera state
@@ -338,44 +351,157 @@ const Three = () => {
 //         tempCamera.quaternion,
 //         dampingFactor
 //       );
-//     } else if (isTransitioning) {
-//       // Handle transition back to neutral rotation
-//       const elapsed = (performance.now() - transitionStartTime) / 1000;
-//       const progress = Math.min(elapsed / transitionDuration, 1);
-
-//       // Create target quaternion (neutral rotation)
-//       const targetQuaternion = new Quaternion();
-//       const tempCamera = camera.clone();
-//       tempCamera.rotation.set(0, 0, 0);
-//       targetQuaternion.copy(tempCamera.quaternion);
-
-//       // Interpolate to neutral rotation
-//       camera.quaternion.slerpQuaternions(
-//         cameraStartQuaternion,
-//         targetQuaternion,
-//         progress
-//       );
-
-//       // Check if transition is complete
-//       if (progress === 1) {
-//         isTransitioning = false;
-//       }
 //     }
-
 //     requestAnimationFrame(updateCameraLook);
 //   }
 
-//   // Cleanup when needed
+//   // Cleanup function
 //   function cleanup() {
 //     window.removeEventListener("mousemove", onMouseMove);
-//     window.removeEventListener("scroll", onScroll);
 //   }
 
 //   // Setup
 //   window.addEventListener("mousemove", onMouseMove);
-//   window.addEventListener("scroll", onScroll);
 //   updateCameraLook();
+
+//   return cleanup;
 // };
+
+const addEyeEffect = () => {
+  let mouse = { x: 0, y: 0 };
+  let isAtTop = true;
+  let effectEnabled = true;
+  let cameraStartQuaternion = new Quaternion();
+  const lookSensitivity = 0.0015;
+  const dampingFactor = 0.05;
+  let lastTouchX = 0;
+  let lastTouchY = 0;
+  let isTouching = false;
+
+  // Handle mouse movement
+  function onMouseMove(event) {
+    if (!effectEnabled || isTouching) return; // Don't process mouse if touch is active
+    mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
+    mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
+  }
+
+  // Handle touch start
+  function onTouchStart(event) {
+    if (!effectEnabled) return;
+    isTouching = true;
+    lastTouchX = event.touches[0].clientX;
+    lastTouchY = event.touches[0].clientY;
+  }
+
+  // Handle touch move
+  function onTouchMove(event) {
+    if (!effectEnabled) return;
+    event.preventDefault(); // Prevent scrolling while moving
+
+    const touchX = event.touches[0].clientX;
+    const touchY = event.touches[0].clientY;
+
+    // Calculate delta from last position
+    const deltaX = touchX - lastTouchX;
+    const deltaY = touchY - lastTouchY;
+
+    // Update mouse position based on touch movement
+    mouse.x = deltaX * lookSensitivity + mouse.x;
+    mouse.y = deltaY * lookSensitivity + mouse.y;
+
+    // Clamp values to prevent excessive rotation
+    mouse.x = Math.max(Math.min(mouse.x, 0.5), -0.5);
+    mouse.y = Math.max(Math.min(mouse.y, 0.5), -0.5);
+
+    lastTouchX = touchX;
+    lastTouchY = touchY;
+  }
+
+  // Handle touch end
+  function onTouchEnd() {
+    isTouching = false;
+    // Optionally reset mouse position gradually
+    gsap.to(mouse, {
+      x: 0,
+      y: 0,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+  }
+
+  // Create neutral quaternion for target
+  const neutralQuaternion = new Quaternion();
+  const tempCamera = camera.clone();
+  tempCamera.rotation.set(0, 0, 0);
+  neutralQuaternion.copy(tempCamera.quaternion);
+
+  // GSAP animation for camera transition
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".hero", // Replace with your section's class
+        start: "top top",
+        end: "80% top", // Adjust this to control transition length
+        scrub: true,
+        onEnter: () => {
+          effectEnabled = false;
+        },
+        onLeaveBack: () => {
+          effectEnabled = true;
+        },
+        onUpdate: (self) => {
+          if (!effectEnabled) {
+            camera.quaternion.slerpQuaternions(
+              cameraStartQuaternion,
+              neutralQuaternion,
+              self.progress
+            );
+          }
+        },
+      },
+    }
+  );
+
+  function updateCameraLook() {
+    if (effectEnabled) {
+      cameraStartQuaternion.copy(camera.quaternion);
+
+      const lookTarget = new Vector3();
+      camera.getWorldPosition(lookTarget);
+      lookTarget.x += mouse.x;
+      lookTarget.y -= mouse.y;
+      lookTarget.z -= 1;
+
+      const tempCamera = camera.clone();
+      tempCamera.lookAt(lookTarget);
+
+      camera.quaternion.slerpQuaternions(
+        cameraStartQuaternion,
+        tempCamera.quaternion,
+        dampingFactor
+      );
+    }
+    requestAnimationFrame(updateCameraLook);
+  }
+
+  // Cleanup function
+  function cleanup() {
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("touchstart", onTouchStart);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener("touchend", onTouchEnd);
+  }
+
+  // Setup event listeners
+  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("touchstart", onTouchStart);
+  window.addEventListener("touchmove", onTouchMove, { passive: false });
+  window.addEventListener("touchend", onTouchEnd);
+  updateCameraLook();
+
+  return cleanup;
+};
 
 const addPointModel = () => {
   const loader = new GLTFLoader(loadingManager);
@@ -724,6 +850,7 @@ const addProjectText = () => {
     textProject = new Mesh(geometry, mat);
     textProject.rotation.y = Math.PI;
     textProject.rotation.x = Math.PI / 2;
+    // textProject.material.opacity = 0;
     textProject.visible = false;
     scene.add(textProject);
   }
@@ -1192,27 +1319,59 @@ const gsapScroll = () => {
         endTrigger: ".team",
         end: "bottom top",
         onEnter: () => {
-          effectComposer.addPass(pixelatedPass);
+          pixelatedPass.setPixelSize(window.devicePixelRatio);
+          currentPixelSize = window.devicePixelRatio;
+
           if (textProject) textProject.visible = true;
-          if (dancingSphere) dancingSphere.visible = false;
-        },
-        onLeaveBack: () => {
-          effectComposer.removePass(pixelatedPass);
-          if (textProject) textProject.visible = false;
-          if (dancingSphere) dancingSphere.visible = true;
+          if (dancingSphere) {
+            gsap.fromTo(
+              uniforms.u_opacity,
+              {
+                value: 0.01,
+              },
+              {
+                scrollTrigger: {
+                  trigger: ".team-start",
+                  scrub: 0,
+                  start: "top top",
+                  // endTrigger: ".team",
+                  end: "30% top",
+                  onEnterBack: () => {
+                    dancingSphere.visible = true;
+                    // effectComposer.removePass(pixelatedPass);
+                    resetPixelation();
+                    // uniforms.u_opacity.value = 0.01;
+                  },
+                },
+                value: 0,
+                ease: "power2.inOut",
+                onComplete: () => {
+                  dancingSphere.visible = false;
+                  if (!effectComposer.passes.includes(pixelatedPass)) {
+                    effectComposer.addPass(pixelatedPass);
+                  }
+                },
+              }
+            );
+          }
         },
 
         onUpdate: (self) => {
-          if (pixelatedPass) {
-            pixelatedPass.setPixelSize(
-              self.progress ** 2 * 200 + window.devicePixelRatio
-            );
+          if (effectComposer.passes.includes(pixelatedPass)) {
+            const easedProgress = gsap.parseEase("power2.inOut")(self.progress);
+            currentPixelSize =
+              easedProgress ** 2 * 200 + window.devicePixelRatio;
+            pixelatedPass.setPixelSize(currentPixelSize);
           }
           if (textFeatured) {
-            textFeatured.material.opacity = 1 - self.progress;
+            textFeatured.material.opacity = gsap.parseEase("power2.inOut")(
+              1 - self.progress * 4
+            );
           }
           if (textProject) {
-            textProject.material.opacity = self.progress ** 2;
+            textProject.material.opacity = gsap.parseEase("power2.inOut")(
+              self.progress
+            );
           }
         },
       },
@@ -1247,20 +1406,33 @@ const gsapScroll = () => {
       scrollTrigger: {
         trigger: ".team-end",
         scrub: 0,
+        start: "top top",
         end: "80% top",
         onLeave: () => {
-          effectComposer.removePass(pixelatedPass);
-          if (textFeatured) textFeatured.visible = false;
+          // effectComposer.removePass(pixelatedPass);
+          // if (textFeatured) textFeatured.visible = false;
+          resetPixelation();
+          if (textFeatured) {
+            textFeatured.material.opacity = 1; // Reset to default
+            textFeatured.visible = false;
+          }
+          // pixelatedPass.setPixelSize(window.devicePixelRatio);
+          // effectComposer.removePass(pixelatedPass);
         },
         onEnterBack: () => {
-          effectComposer.addPass(pixelatedPass);
+          if (!effectComposer.passes.includes(pixelatedPass)) {
+            effectComposer.addPass(pixelatedPass);
+          }
           if (textFeatured) textFeatured.visible = true;
         },
         onUpdate: (self) => {
           if (pixelatedPass) {
-            pixelatedPass.setPixelSize(202 - self.progress * 200 + 1);
+            pixelatedPass.setPixelSize(
+              (200 + window.devicePixelRatio) * (1 - self.progress) + 1
+            );
           }
         },
+        // onScrubComplete: resetPixelation,
       },
     }
   );

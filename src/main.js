@@ -80,14 +80,13 @@
 // import "./vanilla-tilt.js";
 
 //////////////////////////////////////
-// Critical CSS
+
 import "../styles/modern-normalize.css";
 import "../styles/style.css";
 import "../styles/utils.css";
 import "../styles/components/header.css";
 import "../styles/components/hero.css";
 
-// Immediate functionality
 import mobileNav from "./components/mobile-nav.js";
 mobileNav();
 
@@ -99,9 +98,8 @@ window.addEventListener("load", () => {
   });
 });
 
-// Lazy load everything else
+// lazy load
 document.addEventListener("DOMContentLoaded", () => {
-  // Non-critical CSS
   import("../styles/components/hero-description.css");
   import("../styles/components/hero-downArrow.css");
   import("../styles/components/about-description.css");
@@ -138,5 +136,3 @@ document.addEventListener("DOMContentLoaded", () => {
   import("./vanilla-tilt.js").catch(console.error);
   import("./components/lazy-loading.js").then((module) => module.default());
 });
-
-// Lowest priority
