@@ -135,4 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Utils
   import("./vanilla-tilt.js").catch(console.error);
   import("./components/lazy-loading.js").then((module) => module.default());
+
+  window.addEventListener("load", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
 });

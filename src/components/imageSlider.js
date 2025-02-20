@@ -9,7 +9,7 @@ const slider = () => {
 
   const handleMove = (x) => {
     imgContainer.style.transform = `translateX(${
-      (x / widthSliderContainer) * -75
+      (x / widthSliderContainer) * -75 * 1.1
     }%)`;
     imgContainer.style.transition = "transform 0.1s";
   };

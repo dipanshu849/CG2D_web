@@ -27,6 +27,7 @@ import {
   PlaneGeometry,
   Vector3,
   Color,
+  MeshBasicMaterial,
 } from "three";
 // import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { Quaternion } from "three";
@@ -54,6 +55,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 
 let camera, cameraFov;
 let cameraHolder;
+let ambientLight;
 let scene;
 let renderer;
 let object,
@@ -78,6 +80,7 @@ let textAbout,
   strokeMeshAbout,
   totalDistanceLetterAbout;
 let textFeatured, textProject, textConclusion;
+let overlay, overlayMaterial;
 
 let loadingManager = new LoadingManager();
 
@@ -145,7 +148,7 @@ const Three = () => {
   scene.add(cameraHolder);
 
   //   LIGHT
-  const ambientLight = new AmbientLight(0xffffff, 1.3);
+  ambientLight = new AmbientLight(0xffffff, 1.3);
   scene.add(ambientLight);
 
   // const directionalLight = new DirectionalLight(0xffffff, 1);
@@ -234,6 +237,19 @@ const Three = () => {
 
   // ADD WATER AND SKY
   addEndingScene();
+
+  // Black overlay setup
+  const overlayGeometry = new PlaneGeometry(10, 10); // Covers entire viewport
+  overlayMaterial = new MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0,
+  });
+  overlayMaterial.depthWrite = false;
+  overlayMaterial.depthTest = false;
+  overlay = new Mesh(overlayGeometry, overlayMaterial);
+  overlay.position.z = -1; // Position in front of camera
+  overlay.visible = false;
 
   //   AUTO RENDER
   const clock = new Clock();
@@ -1076,6 +1092,8 @@ const addEndingScene = () => {
     alpha: 0.0,
   });
 
+  // water.material.sunDirection = new Vector3(0, 10, 0);
+
   water.material.transparent = true;
   water.rotation.x = -Math.PI / 2;
   water.position.set(0, -6, 0);
@@ -1107,8 +1125,17 @@ const addEndingScene = () => {
   sky.material.uniforms["mieDirectionalG"].value = 0.8;
   sky.material.uniforms["sunPosition"].value = new Vector3(0, 1000, -2000);
 
+  // console.log(sky.material);
+
+  // sky.material.uniforms["sunPosition"].value = new Vector3(0, -20, 2000);
+  // const sunPosition = new Vector3(0, -17, 2000);
+  // sunPosition.normalize(); // Important for consistent sun shape
+  // sky.material.uniforms["sunPosition"].value.copy(sunPosition);
+
   sky.position.y = 50;
+
   scene.add(endingEnv);
+
   endingEnv.visible = false;
 };
 
@@ -1142,7 +1169,7 @@ const gsapScroll = () => {
     {
       scrollTrigger: {
         trigger: ".header",
-        scrub: 0,
+        scrub: true,
       },
       x: 0,
       y: 0,
@@ -1781,6 +1808,50 @@ const gsapScroll = () => {
     }
   );
 
+  // SCENE FADE OUT
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".conclusion",
+        start: "top top",
+        // end: "bottom top",
+        // scrub: 0,
+        onEnter: () => {
+          if (overlay) {
+            overlay.visible = true;
+            camera.add(overlay);
+          }
+        },
+        onLeaveBack: () => {
+          if (overlay) {
+            overlay.visible = false;
+            camera.remove(overlay);
+          }
+        },
+      },
+    }
+  );
+
+  gsap.to(
+    {},
+    {
+      scrollTrigger: {
+        trigger: ".conclusion",
+        start: "30% top",
+        endTrigger: ".fade__out",
+        end: "bottom top",
+        // scrub: 0,
+        onUpdate: (self) => {
+          if (overlay) {
+            const easedProgress = gsap.parseEase("power2.inOut")(self.progress);
+            overlay.material.opacity = easedProgress;
+          }
+        },
+      },
+    }
+  );
+
   // APPEAR THE JACK SHIP
   // gsap.to(
   //   {},
@@ -1799,22 +1870,22 @@ const gsapScroll = () => {
   //   }
   // );
 
-  let contact = document.querySelector(".contact__final");
-  // SHOW CONTACT SECTION
-  gsap.to(
-    {},
-    {
-      scrollTrigger: {
-        trigger: ".contact__final",
-        start: "top center",
-        end: "top top",
-        scrub: 0,
-        onUpdate: (self) => {
-          contact.style.opacity = self.progress;
-        },
-      },
-    }
-  );
+  // let contact = document.querySelector(".contact__final");
+  // // SHOW CONTACT SECTION
+  // gsap.to(
+  //   {},
+  //   {
+  //     scrollTrigger: {
+  //       trigger: ".contact__final",
+  //       start: "top center",
+  //       end: "top top",
+  //       scrub: 0,
+  //       onUpdate: (self) => {
+  //         contact.style.opacity = self.progress;
+  //       },
+  //     },
+  //   }
+  // );
 };
 
 // OPTION DROPPED [WILL NOT BE USED]

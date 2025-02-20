@@ -59,6 +59,14 @@
   /* border: 2px solid red; */
 }
 
+.project__img-1 {
+  border-top-left-radius: 4px;
+}
+
+.project__img-2 {
+  border-bottom-right-radius: 4px;
+}
+
 .project__img-wrapper img {
   width: 100%;
   height: 100%;

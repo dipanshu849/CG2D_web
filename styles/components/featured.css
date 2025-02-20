@@ -64,7 +64,7 @@
   display: flex;
   flex-wrap: nowrap;
   gap: 1rem;
-  width: 400%;
+  width: 410%;
   margin-top: 1rem;
   transform: translateX(0%);
   transition: transform 0.5s;
