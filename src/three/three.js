@@ -73,7 +73,15 @@ let water, sky, endingEnv;
 //   turn = "left";
 
 // let resizingScaleValue = window.innerWidth / 1300;
-
+let pixelatedPixelSize = 20;
+if (window.innerWidth < 640) {
+  pixelatedPixelSize = 20;
+} else if (window.innerWidth < 1280) {
+  pixelatedPixelSize = 40;
+} else {
+  pixelatedPixelSize = 60;
+}
+// let bloomness =
 let textAbout,
   strokeGroup,
   lineMaterialAbout,
@@ -93,7 +101,10 @@ dLoader.setDecoderConfig({ type: "js" });
 const uniforms = {
   u_resolution: {
     type: "v2",
-    value: new Vector2(window.innerWidth, window.innerHeight),
+    value: new Vector2(
+      Math.max(Math.min(window.innerWidth, 1900), 375),
+      Math.max(Math.min(window.innerHeight, 854), 812)
+    ),
   },
   u_time: { type: "f", value: 5.0 },
   u_opacity: { type: "f", value: 0.0 },
@@ -159,7 +170,12 @@ const Three = () => {
   // scene.add(pointLight);
 
   //   RENDERER
-  renderer = new WebGLRenderer();
+  renderer = new WebGLRenderer({
+    powerPreference: "low-power",
+    antialias: false,
+    stencil: false,
+    depth: false,
+  });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   document.body.appendChild(renderer.domElement);
@@ -1467,6 +1483,7 @@ const gsapScroll = () => {
     {
       x: 0,
       y: 30,
+
       z: 0,
     },
     {
@@ -1477,7 +1494,8 @@ const gsapScroll = () => {
         end: "bottom top",
       },
       x: 0,
-      y: 60,
+      // y: 50,
+      y: 50,
       z: 0,
     }
   );
@@ -1532,7 +1550,8 @@ const gsapScroll = () => {
           if (effectComposer.passes.includes(pixelatedPass)) {
             const easedProgress = gsap.parseEase("power2.inOut")(self.progress);
             currentPixelSize =
-              easedProgress ** 2 * 100 + Math.min(window.devicePixelRatio, 2);
+              easedProgress ** 2 * pixelatedPixelSize +
+              Math.min(window.devicePixelRatio, 2);
             pixelatedPass.setPixelSize(currentPixelSize);
           }
           if (textFeatured) {
@@ -1555,7 +1574,7 @@ const gsapScroll = () => {
     camera.position,
     {
       x: 0,
-      y: 60,
+      y: 50,
       z: 0,
     },
     {
@@ -1596,7 +1615,7 @@ const gsapScroll = () => {
         onUpdate: (self) => {
           if (pixelatedPass) {
             pixelatedPass.setPixelSize(
-              (100 + Math.min(window.devicePixelRatio, 2)) *
+              (pixelatedPixelSize + Math.min(window.devicePixelRatio, 2)) *
                 (1 - self.progress) +
                 1
             );
@@ -1651,11 +1670,6 @@ const gsapScroll = () => {
         onLeaveBack: () => {
           // if (dancer) dancer.visible = false;
           achievements.style.pointerEvents = "none";
-        },
-        onUpdate: (self) => {
-          // if (dancer) {
-          //   dancer.position.z = -10 * (1 - self.progress) + 8 * self.progress;
-          // }
         },
       },
     }

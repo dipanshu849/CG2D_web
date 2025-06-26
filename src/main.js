@@ -91,12 +91,6 @@ import mobileNav from "./components/mobile-nav.js";
 mobileNav();
 
 // window.scrollTo({ top: 0, behavior: "smooth" });
-window.addEventListener("load", () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "auto",
-  });
-});
 
 // lazy load
 document.addEventListener("DOMContentLoaded", () => {
@@ -136,10 +130,17 @@ document.addEventListener("DOMContentLoaded", () => {
   import("./vanilla-tilt.js").catch(console.error);
   import("./components/lazy-loading.js").then((module) => module.default());
 
+  // window.addEventListener("load", () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth",
+  //   });
+  // });
+
   window.addEventListener("load", () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: "auto",
     });
   });
 });
