@@ -1635,11 +1635,11 @@ const gsapScroll = () => {
         end: "bottom top",
         onEnter: (self) => {
           if (textProject) textProject.visible = false;
-          if (scene) scene.background = new Color("#001633");
+          // if (scene) scene.background = new Color("#001633");
         },
         onLeaveBack: (self) => {
           if (textProject) textProject.visible = true;
-          if (scene) scene.background = null;
+          // if (scene) scene.background = null;
         },
       },
     }
@@ -1674,73 +1674,6 @@ const gsapScroll = () => {
       },
     }
   );
-
-  // const sun = document.querySelector(".sun");
-  // const sky = document.querySelector(".sky");
-  // const sunSet = document.querySelector(".sunSet");
-  // const sunDay = document.querySelector(".sunDay");
-  // const horizon = document.querySelector(".horizon");
-  // const moon = document.querySelector(".moon");
-  // const horizonNight = document.querySelector(".horizonNight");
-
-  // DAY TO SUNSET
-  // gsap.to(
-  //   {},
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".project",
-  //       start: "bottom top",
-  //       endTrigger: ".achievements",
-  //       end: "20% top",
-  //       scrub: true,
-  //       onUpdate: (self) => {
-  //         let sunSetTime = 0.3;
-  //         if (self.progress < 0.5)
-  //           sun.style.setProperty("--sunMeter", self.progress);
-
-  //         sun.style.opacity = 0.1 * (1 - self.progress) + 0.8 * self.progress;
-
-  //         sky.style.opacity = 0.52 * (1 - self.progress) + 0.1 * self.progress;
-  //         if (self.progress > sunSetTime)
-  //           sunSet.style.opacity =
-  //             ((self.progress - sunSetTime) / (1 - sunSetTime)) * 0.3;
-  //         sunDay.style.opacity = self.progress * 0.5 * 0.5;
-  //         horizon.style.opacity = self.progress * 0.99;
-  //       },
-  //     },
-  //   }
-  // );
-
-  // // SUNSET TO NIGHT
-  // gsap.to(
-  //   {},
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".achievements",
-  //       start: "25% top",
-
-  //       end: "bottom top",
-  //       scrub: true,
-  //       onUpdate: (self) => {
-  //         sun.style.opacity = 0.8 * (1 - self.progress) + 0.01 * self.progress;
-
-  //         moon.style.opacity = 0.85 * self.progress;
-  //         sunSet.style.opacity = 0.3 * (1 - self.progress);
-  //         sunDay.style.opacity = 0.25 * (1 - self.progress);
-  //         horizon.style.opacity = 0.99 * (1 - self.progress);
-  //         horizonNight.style.opacity = 0.8 * self.progress;
-  //       },
-  //       onLeave: (self) => {
-  //         if (textConclusion) {
-  //           textConclusion.visible = true;
-  //         }
-  //       },
-  //       onEnterBack: (self) => {
-  //         if (textConclusion) textConclusion.visible = false;
-  //       },
-  //     },
-  //   }
-  // );
 
   // ADD CONCLUSION TEXT
   gsap.to(
