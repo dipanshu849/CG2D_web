@@ -23,14 +23,54 @@
 
 .left {
   transform: translateX(300%);
+  will-change: transform;
   animation: scrollLeft 30s linear infinite;
   animation-delay: calc(30s / var(--items) * (var(--items) - var(--n)) * -1);
 }
 
 .right {
   transform: translateX(-300%);
+  will-change: transform;
   animation: scrollRight 30s linear infinite;
   animation-delay: calc(30s / var(--items) * (var(--items) - var(--n)) * -1);
+}
+
+.twelveStep {
+  max-width: 1200%;
+  will-change: transform;
+  animation: walking 1.2s steps(12) infinite;
+}
+
+.eighteenStep {
+  max-width: 1800%;
+  will-change: transform;
+  animation: walking 1.2s steps(18) infinite;
+}
+
+.twentyfourStep {
+  max-width: 2400%;
+  will-change: transform;
+  animation: walking 1.2s steps(24) infinite;
+}
+
+@keyframes scrollRight {
+  to {
+    /* right: -416px; */
+    transform: translateX(600%);
+  }
+}
+
+@keyframes scrollLeft {
+  to {
+    /* left: -416px; */
+    transform: translateX(-600%);
+  }
+}
+
+@keyframes walking {
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .team__20-21:hover .card,
@@ -49,20 +89,6 @@
     7.5px -3.75px 0 0 var(--clr-slate600);
 }
 
-@keyframes scrollRight {
-  to {
-    /* right: -416px; */
-    transform: translateX(600%);
-  }
-}
-
-@keyframes scrollLeft {
-  to {
-    /* left: -416px; */
-    transform: translateX(-600%);
-  }
-}
-
 .card__back-img {
   position: absolute;
   width: 100%;
@@ -72,6 +98,7 @@
 }
 
 .card__title {
+  display: none;
   font-size: var(--size-sm);
 }
 
@@ -79,15 +106,25 @@
   /* border: 2px solid red; */
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .card__img-container {
-  /* border: 2px solid red; */
+  /* border: 2px solid red;
+  backdrop-filter: blur(5px); */
   position: relative;
   flex: 1;
   width: calc(12.5rem * var(--size-img));
   aspect-ratio: 1;
   overflow: hidden;
+}
+
+.card__stats-container {
+  flex: 1;
+  backdrop-filter: blur(10px) saturate(150%);
+  padding: 0.2em;
+  border-radius: 6px;
+  box-shadow: 0 -2px 5px 0 var(--clr-slate600);
 }
 
 .card__img {
@@ -97,34 +134,14 @@
   height: 100%;
 }
 
-.twelveStep {
-  max-width: 1200%;
-  animation: walking 1.2s steps(12) infinite;
-}
-
-.eighteenStep {
-  max-width: 1800%;
-  animation: walking 1.2s steps(18) infinite;
-}
-
-.twentyfourStep {
-  max-width: 2400%;
-  animation: walking 1.2s steps(24) infinite;
-}
-
-.card__stats-container {
-  flex: 1;
-}
-
-@keyframes walking {
-  to {
-    transform: translateX(-100%);
-  }
-}
-
 .name {
   margin: 0.5rem 0;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--clr-slate600);
   font-size: var(--size-sm);
+  text-shadow: 1px 1px 0 var(--clr-slate600);
 }
 
 .progress__container {
@@ -136,14 +153,17 @@
 }
 
 .progress__container label {
-  font-size: var(--size-xs);
+  font-size: var(--size-sm);
+  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 0 var(--clr-slate600);
 }
 
 /* AI */
 .skills-tags {
-  display: flex;
+  display: none;
   gap: 0.5rem;
   margin: 0.5rem 0.1rem 0 0;
+  text-shadow: 1px 1px 0 var(--clr-slate600);
 }
 
 .skill-tag {
@@ -155,10 +175,11 @@
 }
 
 .action-buttons {
-  display: flex;
+  display: none;
   gap: 0.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.2rem;
+  text-shadow: 1px 1px 0 var(--clr-slate600);
 }
 
 .action-buttons button {

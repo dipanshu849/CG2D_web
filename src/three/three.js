@@ -19,17 +19,14 @@ import {
   IcosahedronGeometry,
   Mesh,
   MathUtils,
-  MeshStandardMaterial,
   InstancedMesh,
   Object3D,
   MeshPhysicalMaterial,
   RepeatWrapping,
   PlaneGeometry,
   Vector3,
-  Color,
   MeshBasicMaterial,
 } from "three";
-// import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { Quaternion } from "three";
 
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
@@ -51,8 +48,10 @@ import { Sky } from "three/examples/jsm/Addons.js";
 
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-// import Stats from "three/examples/jsm/libs/stats.module.js";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { MeshSurfaceSampler } from "three/examples/jsm/Addons.js";
 
+let AMOUNT = 50000;
 let camera, cameraFov;
 let cameraHolder;
 let ambientLight;
@@ -60,19 +59,12 @@ let scene;
 let renderer;
 let object,
   objectData = {},
-  originalPositions,
-  originalPositionSphere;
+  originalPositions;
 let dancingSphere;
 let effectComposer, pixelatedPass;
-// let mixer, dancer;
 let star, closeStar;
 let water, sky, endingEnv;
-// let jackShip,
-//   mixerShip,
-//   actionShip,
-//   turn = "left";
 
-// let resizingScaleValue = window.innerWidth / 1300;
 let pixelatedPixelSize = 20;
 if (window.innerWidth < 640) {
   pixelatedPixelSize = 20;
@@ -119,10 +111,9 @@ function loadFont(url) {
     loader.load(url, resolve, undefined, reject);
   });
 }
-// const font = loadFont("/Sarala_Regular.json");
+
 async function initializeFont() {
   const font = await loadFont("/Sarala_Regular.json");
-  // Use font here or pass it to other functions that need it
   return font;
 }
 let currentPixelSize = Math.min(window.devicePixelRatio, 2);
@@ -151,7 +142,6 @@ const Three = () => {
     0.3,
     1000
   );
-  // console.log(window.innerWidth);
   camera.position.set(0, 0, -45);
 
   cameraHolder = new Group();
@@ -161,13 +151,6 @@ const Three = () => {
   //   LIGHT
   ambientLight = new AmbientLight(0xffffff, 1.3);
   scene.add(ambientLight);
-
-  // const directionalLight = new DirectionalLight(0xffffff, 1);
-  // directionalLight.position.set(500, 500, 500);
-  // scene.add(directionalLight);
-
-  // const pointLight = new PointLight(0xffffff, 5, 0, 0);
-  // scene.add(pointLight);
 
   //   RENDERER
   renderer = new WebGLRenderer({
@@ -201,12 +184,6 @@ const Three = () => {
   effectComposer.addPass(bloomPass);
   effectComposer.setSize(window.innerWidth, window.innerHeight);
 
-  // GRID AND AXIS HELPER
-  // const gridHelper = new GridHelper(200, 40);
-  // const axisHelper = new AxesHelper(200);
-  // scene.add(axisHelper);
-  // scene.add(gridHelper);
-
   // LoadingManager
   let percentageLoaded = document.querySelector(".loadingManager__percentage");
   let loadingManagerContainer = document.querySelector(
@@ -214,9 +191,6 @@ const Three = () => {
   );
   let heroTitle = document.querySelector(".hero__title path");
   loadingManager.onProgress = (url, Loaded, total) => {
-    // if (Loaded / total < 0.1)
-    //   percentageLoaded.textContent =
-    //     "00" + `${Math.trunc((Loaded / total) * 100)}`;
     if (0.2 <= Loaded / total && Loaded / total < 0.9) {
       percentageLoaded.textContent =
         "0" + `${Math.trunc((Loaded / total) * 100)}`;
@@ -227,7 +201,6 @@ const Three = () => {
     loadingManagerContainer.style.display = "none";
     document.body.style.overflowY = "auto";
     heroTitle.style.animation = "outline 2s ease-in both";
-    // document.body.appendChild(stats.dom);
   };
 
   // ADD STARS
@@ -242,8 +215,6 @@ const Three = () => {
   // ADD MODELS
   addPointModel();
   addDancingSphere();
-  // addDomModel();
-  // addShipModel();
 
   // ADD TEXT
   addAboutText();
@@ -281,6 +252,7 @@ const Three = () => {
     }
     effectComposer.render(0.1);
   }
+
   window.addEventListener("resize", onWindowResize);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -298,100 +270,12 @@ const Three = () => {
   renderer.setAnimationLoop(animate);
 };
 
-// I DON'T UNDERSTAND THIS FULLY
-// const addEyeEffect = () => {
-//   let mouse = { x: 0, y: 0 };
-//   let isAtTop = true;
-//   let effectEnabled = true;
-//   let cameraStartQuaternion = new Quaternion();
-//   const lookSensitivity = 0.0015;
-//   const dampingFactor = 0.05;
-
-//   function onMouseMove(event) {
-//     if (!effectEnabled) return;
-//     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
-//     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
-//   }
-
-//   // Create a neutral quaternion for target
-//   const neutralQuaternion = new Quaternion();
-//   const tempCamera = camera.clone();
-//   tempCamera.rotation.set(0, 0, 0);
-//   neutralQuaternion.copy(tempCamera.quaternion);
-
-//   // Create GSAP animation for camera transition
-//   gsap.to(
-//     {},
-//     {
-//       scrollTrigger: {
-//         trigger: ".hero", // Replace with your section's class
-//         start: "top top",
-//         end: "80% top", // Adjust this to control transition length
-//         scrub: true,
-//         onEnter: () => {
-//           effectEnabled = false;
-//         },
-//         onLeaveBack: () => {
-//           effectEnabled = true;
-//         },
-//         onUpdate: (self) => {
-//           if (!effectEnabled) {
-//             camera.quaternion.slerpQuaternions(
-//               cameraStartQuaternion,
-//               neutralQuaternion,
-//               self.progress
-//             );
-//           }
-//         },
-//       },
-//     }
-//   );
-
-//   function updateCameraLook() {
-//     if (effectEnabled) {
-//       // Store current camera state
-//       cameraStartQuaternion.copy(camera.quaternion);
-
-//       // Create look target
-//       const lookTarget = new Vector3();
-//       camera.getWorldPosition(lookTarget);
-//       lookTarget.x += mouse.x;
-//       lookTarget.y -= mouse.y;
-//       lookTarget.z -= 1;
-
-//       // Create temporary camera for look rotation
-//       const tempCamera = camera.clone();
-//       tempCamera.lookAt(lookTarget);
-
-//       // Smoothly interpolate to look rotation
-//       camera.quaternion.slerpQuaternions(
-//         cameraStartQuaternion,
-//         tempCamera.quaternion,
-//         dampingFactor
-//       );
-//     }
-//     requestAnimationFrame(updateCameraLook);
-//   }
-
-//   // Cleanup function
-//   function cleanup() {
-//     window.removeEventListener("mousemove", onMouseMove);
-//   }
-
-//   // Setup
-//   window.addEventListener("mousemove", onMouseMove);
-//   updateCameraLook();
-
-//   return cleanup;
-// };
-
 const addEyeEffect = () => {
   let mouse = { x: 0, y: 0 };
-  let isAtTop = true;
   let effectEnabled = true;
   let cameraStartQuaternion = new Quaternion();
   const lookSensitivity = 0.0015;
-  const dampingFactor = 0.05;
+  const dampingFactor = 0.01;
   let lastTouchX = 0;
   let lastTouchY = 0;
   let startTouchX = 0;
@@ -407,7 +291,6 @@ const addEyeEffect = () => {
     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
   }
 
-  // Handle touch start
   function onTouchStart(event) {
     if (!effectEnabled) return;
     isTouching = true;
@@ -419,7 +302,6 @@ const addEyeEffect = () => {
     lastTouchY = startTouchY;
   }
 
-  // Handle touch move
   function onTouchMove(event) {
     if (!effectEnabled) return;
     const touch = event.touches[0];
@@ -429,7 +311,6 @@ const addEyeEffect = () => {
     if (initialTouch) {
       const deltaXInitial = currentX - startTouchX;
       const deltaYInitial = currentY - startTouchY;
-      // Determine scroll direction with threshold (adjust 5px as needed)
       if (
         Math.abs(deltaYInitial) > Math.abs(deltaXInitial) &&
         Math.abs(deltaYInitial) > 5
@@ -449,11 +330,9 @@ const addEyeEffect = () => {
     const deltaX = currentX - lastTouchX;
     const deltaY = currentY - lastTouchY;
 
-    // Update mouse position
     mouse.x += deltaX * lookSensitivity;
     mouse.y += deltaY * lookSensitivity;
 
-    // Clamp values
     mouse.x = Math.max(Math.min(mouse.x, 0.5), -0.5);
     mouse.y = Math.max(Math.min(mouse.y, 0.5), -0.5);
 
@@ -461,7 +340,6 @@ const addEyeEffect = () => {
     lastTouchY = currentY;
   }
 
-  // Handle touch end
   function onTouchEnd() {
     isTouching = false;
     initialTouch = false;
@@ -474,21 +352,19 @@ const addEyeEffect = () => {
     });
   }
 
-  // Create neutral quaternion for target
   const neutralQuaternion = new Quaternion();
   const tempCamera = camera.clone();
   tempCamera.rotation.set(0, 0, 0);
   neutralQuaternion.copy(tempCamera.quaternion);
 
-  // GSAP animation for camera transition
   gsap.to(
     {},
     {
       scrollTrigger: {
-        trigger: ".hero", // Replace with your section's class
+        trigger: ".hero",
         start: "top top",
-        end: "80% top", // Adjust this to control transition length
-        scrub: true,
+        end: "80% top",
+        scrub: 0,
         onEnter: () => {
           effectEnabled = false;
         },
@@ -537,7 +413,6 @@ const addEyeEffect = () => {
     window.removeEventListener("touchend", onTouchEnd);
   }
 
-  // Setup event listeners
   window.addEventListener("mousemove", onMouseMove);
   window.addEventListener("touchstart", onTouchStart);
   window.addEventListener("touchmove", onTouchMove, { passive: false });
@@ -547,205 +422,80 @@ const addEyeEffect = () => {
   return cleanup;
 };
 
-// const addEyeEffect = () => {
-//   let mouse = { x: 0, y: 0 };
-//   let isAtTop = true;
-//   let effectEnabled = true;
-//   let cameraStartQuaternion = new Quaternion();
-//   const lookSensitivity = 0.0015;
-//   const dampingFactor = 0.05;
-//   let lastTouchX = 0;
-//   let lastTouchY = 0;
-//   let isTouching = false;
-
-//   // Handle mouse movement
-//   function onMouseMove(event) {
-//     if (!effectEnabled || isTouching) return; // Don't process mouse if touch is active
-//     mouse.x = (event.clientX - window.innerWidth / 2) * lookSensitivity;
-//     mouse.y = (event.clientY - window.innerHeight / 2) * lookSensitivity;
-//   }
-
-//   // Handle touch start
-//   function onTouchStart(event) {
-//     if (!effectEnabled) return;
-//     isTouching = true;
-//     lastTouchX = event.touches[0].clientX;
-//     lastTouchY = event.touches[0].clientY;
-//   }
-
-//   // Handle touch move
-//   function onTouchMove(event) {
-//     if (!effectEnabled) return;
-//     event.preventDefault(); // Prevent scrolling while moving
-
-//     const touchX = event.touches[0].clientX;
-//     const touchY = event.touches[0].clientY;
-
-//     // Calculate delta from last position
-//     const deltaX = touchX - lastTouchX;
-//     const deltaY = touchY - lastTouchY;
-
-//     // Update mouse position based on touch movement
-//     mouse.x = deltaX * lookSensitivity + mouse.x;
-//     mouse.y = deltaY * lookSensitivity + mouse.y;
-
-//     // Clamp values to prevent excessive rotation
-//     mouse.x = Math.max(Math.min(mouse.x, 0.5), -0.5);
-//     mouse.y = Math.max(Math.min(mouse.y, 0.5), -0.5);
-
-//     lastTouchX = touchX;
-//     lastTouchY = touchY;
-//   }
-
-//   // Handle touch end
-//   function onTouchEnd() {
-//     isTouching = false;
-//     // Optionally reset mouse position gradually
-//     gsap.to(mouse, {
-//       x: 0,
-//       y: 0,
-//       duration: 0.5,
-//       ease: "power2.out",
-//     });
-//   }
-
-//   // Create neutral quaternion for target
-//   const neutralQuaternion = new Quaternion();
-//   const tempCamera = camera.clone();
-//   tempCamera.rotation.set(0, 0, 0);
-//   neutralQuaternion.copy(tempCamera.quaternion);
-
-//   // GSAP animation for camera transition
-//   gsap.to(
-//     {},
-//     {
-//       scrollTrigger: {
-//         trigger: ".hero", // Replace with your section's class
-//         start: "top top",
-//         end: "80% top", // Adjust this to control transition length
-//         scrub: true,
-//         onEnter: () => {
-//           effectEnabled = false;
-//         },
-//         onLeaveBack: () => {
-//           effectEnabled = true;
-//         },
-//         onUpdate: (self) => {
-//           if (!effectEnabled) {
-//             camera.quaternion.slerpQuaternions(
-//               cameraStartQuaternion,
-//               neutralQuaternion,
-//               self.progress
-//             );
-//           }
-//         },
-//       },
-//     }
-//   );
-
-//   function updateCameraLook() {
-//     if (effectEnabled) {
-//       cameraStartQuaternion.copy(camera.quaternion);
-
-//       const lookTarget = new Vector3();
-//       camera.getWorldPosition(lookTarget);
-//       lookTarget.x += mouse.x;
-//       lookTarget.y -= mouse.y;
-//       lookTarget.z -= 1;
-
-//       const tempCamera = camera.clone();
-//       tempCamera.lookAt(lookTarget);
-
-//       camera.quaternion.slerpQuaternions(
-//         cameraStartQuaternion,
-//         tempCamera.quaternion,
-//         dampingFactor
-//       );
-//     }
-//     requestAnimationFrame(updateCameraLook);
-//   }
-
-//   // Cleanup function
-//   function cleanup() {
-//     window.removeEventListener("mousemove", onMouseMove);
-//     window.removeEventListener("touchstart", onTouchStart);
-//     window.removeEventListener("touchmove", onTouchMove);
-//     window.removeEventListener("touchend", onTouchEnd);
-//   }
-
-//   // Setup event listeners
-//   window.addEventListener("mousemove", onMouseMove);
-//   window.addEventListener("touchstart", onTouchStart);
-//   window.addEventListener("touchmove", onTouchMove, { passive: false });
-//   window.addEventListener("touchend", onTouchEnd);
-//   updateCameraLook();
-
-//   return cleanup;
-// };
-
 const addPointModel = () => {
   const loader = new GLTFLoader(loadingManager);
   loader.setDRACOLoader(dLoader);
   loader.load("/models/space_station_c.glb", (gltf) => {
     object = gltf.scene;
     // GETTING POSITION
-    const positions = combineBuffer(object, "position");
-    const targetPositions = createTargetPosition(positions);
-    createMesh(positions, targetPositions, scene, 4.05, 0, 0, 0, 0xffffff);
+    const positions = getInitalPosition(object, "position", 1.5);
+    const targetPositions = createTargetPosition(15);
+    createMesh(positions, targetPositions, scene, 1);
   });
 
-  function combineBuffer(model, bufferName) {
-    let count = 0;
-
-    model.traverse(function (child) {
+  function getInitalPosition(model, name, scale = 1) {
+    let geometries = [];
+    model.traverse((child) => {
       if (child.isMesh) {
-        const buffer = child.geometry.attributes[bufferName];
-
-        count += buffer.array.length;
+        let g = child.geometry.clone().toNonIndexed();
+        for (let attribute in g.attributes) {
+          if (attribute != name) {
+            g.deleteAttribute(attribute);
+          }
+        }
+        g.applyMatrix4(child.matrixWorld);
+        geometries.push(g);
       }
     });
-    const combined = new Float32Array(count);
+    let combinedGeometry = mergeGeometries(geometries)
+      .center()
+      .scale(scale, scale, scale);
 
-    let offset = 0;
+    let material = new MeshBasicMaterial();
+    let mesh = new Mesh(combinedGeometry, material);
 
-    model.traverse(function (child) {
-      if (child.isMesh) {
-        const buffer = child.geometry.attributes[bufferName];
-        combined.set(buffer.array, offset);
-        offset += buffer.array.length;
-      }
-    });
-    return new BufferAttribute(combined, 3);
-  }
+    let sampler = new MeshSurfaceSampler(mesh).build();
+    let pointsData = [];
+    const position = new Vector3();
 
-  function createTargetPosition(Positions) {
-    const sphereRadius = 5; // Adjust based on your needs
-    const sphereGeometry = new SphereGeometry(
-      sphereRadius,
-      32,
-      32
-    ).toNonIndexed();
-    const spherePositions = sphereGeometry.attributes.position;
-    const combined = new Float32Array(Positions.count * 3);
-    let offset = 0;
-
-    for (let i = 0; i < Positions.count * 3; i += 3) {
-      // If we have more points than the sphere geometry, we'll wrap around
-      const sphereIndex = offset % spherePositions.count;
-      combined.set(
-        [
-          spherePositions.getX(sphereIndex),
-          spherePositions.getY(sphereIndex),
-          spherePositions.getZ(sphereIndex),
-        ],
-        i
-      );
-      offset += 1;
+    for (let i = 0; i < AMOUNT; i++) {
+      sampler.sample(position);
+      position.add(new Vector3(-2, 0, 0));
+      position.toArray(pointsData, i * 3);
     }
-    return new BufferAttribute(combined, 3);
+
+    return new BufferAttribute(new Float32Array(pointsData), 3);
   }
 
-  function createMesh(positions, targetPositions, scene, scale, x, y, z, c) {
+  function createTargetPosition(radius = 5, offset = [0, 0, 0]) {
+    const sphereGeometry = new SphereGeometry(radius, 32, 32)
+      .toNonIndexed()
+      .center();
+
+    const material = new MeshBasicMaterial();
+    const mesh = new Mesh(sphereGeometry, material);
+    const sampler = new MeshSurfaceSampler(mesh).build();
+    let pointsData = [];
+    const position = new Vector3();
+    for (let i = 0; i < AMOUNT; i++) {
+      sampler.sample(position);
+      position.add(new Vector3(offset[0], offset[1], offset[2]));
+
+      position.toArray(pointsData, i * 3);
+    }
+    return new BufferAttribute(new Float32Array(pointsData), 3);
+  }
+
+  function createMesh(
+    positions,
+    targetPositions,
+    scene,
+    scale = 1,
+    x = 0,
+    y = 0,
+    z = 0,
+    c = 0xffffff
+  ) {
     const geometry = new BufferGeometry();
     geometry.setAttribute("position", positions.clone());
     geometry.setAttribute("finalPosition", targetPositions.clone());
@@ -755,14 +505,16 @@ const addPointModel = () => {
 
     const mesh = new Points(
       geometry,
-      new PointsMaterial({ size: 0.03, color: c })
+      new PointsMaterial({ size: 0.02, color: c })
     );
     mesh.scale.x = mesh.scale.y = mesh.scale.z = scale;
     mesh.position.x = x;
     mesh.position.y = y;
     mesh.position.z = z;
 
-    mesh.rotation.y = 1;
+    mesh.rotation.y = 0.6;
+    mesh.rotation.z = -0.6;
+    mesh.rotation.x = 0.6;
     scene.add(mesh);
 
     objectData = {
@@ -778,9 +530,9 @@ const addPointModel = () => {
     originalPositions = new Float32Array(
       mesh.geometry.attributes.position.array
     );
-    originalPositionSphere = new Float32Array(
-      mesh.geometry.attributes.finalPosition.array
-    );
+    // originalPositionSphere = new Float32Array(
+    //   mesh.geometry.attributes.finalPosition.array
+    // );
   }
 };
 
@@ -802,7 +554,7 @@ const addStars = () => {
   // FAR STARS
   let farStars = 200;
   const geometry = new SphereGeometry(0.25, 8, 4);
-  const material = new MeshStandardMaterial({ color: 0xffffff });
+  const material = new MeshBasicMaterial({ color: 0xffffff });
   star = new InstancedMesh(geometry, material, farStars);
   scene.add(star);
   const dummyStar = new Object3D();
@@ -819,7 +571,7 @@ const addStars = () => {
   // CLOSE STARS
   let closeStars = 200;
   const closeStarGeometry = new SphereGeometry(0.1, 24, 12);
-  const closeStarMaterial = new MeshStandardMaterial({ color: 0xffffff });
+  const closeStarMaterial = new MeshBasicMaterial({ color: 0xffffff });
   closeStar = new InstancedMesh(
     closeStarGeometry,
     closeStarMaterial,
@@ -840,46 +592,6 @@ const addStars = () => {
   star.matrixAutoUpdate = false;
   closeStar.matrixAutoUpdate = false;
 };
-
-// const addDomModel = () => {
-//   const loader = new GLTFLoader();
-//   loader.setDRACOLoader(dLoader);
-//   loader.load("/models/space_dance_c.glb", (gltf) => {
-//     dancer = gltf.scene;
-//     scene.add(dancer);
-//     dancer.scale.x = dancer.scale.y = dancer.scale.z = 2;
-//     dancer.rotation.x = -Math.PI / 2;
-//     dancer.rotation.z = Math.PI;
-//     dancer.position.y = 6;
-//     dancer.visible = false;
-//     mixer = new AnimationMixer(dancer);
-//     mixer.clipAction(gltf.animations[0]).play();
-//   });
-// };
-
-// const addShipModel = () => {
-//   const loader = new GLTFLoader(loadingManager);
-//   loader.setDRACOLoader(dLoader);
-//   loader.load(
-//     "/models/jack_ship_c.glb",
-//     (gltf) => {
-//       jackShip = gltf.scene;
-//       jackShip.rotation.y = Math.PI * 1.2;
-//       jackShip.position.y = -13;
-//       jackShip.position.x = 5;
-//       jackShip.position.z = 100;
-//       jackShip.renderOrder = 2;
-//       let animations = gltf.animations[0];
-//       mixerShip = new AnimationMixer(jackShip);
-//       actionShip = mixerShip.clipAction(animations);
-//       actionShip.play();
-//       endingEnv.add(jackShip);
-//       jackShip.visible = false;
-//     },
-//     undefined,
-//     undefined
-//   );
-// };
 
 const addAboutText = () => {
   async function doit(font) {
@@ -1175,23 +887,6 @@ const gsapScroll = () => {
       }
     );
   });
-
-  // CAMERA MOVES BACKWARD [TRIGGER: HEADER]
-  gsap.fromTo(
-    camera.position,
-    {
-      z: -50,
-    },
-    {
-      scrollTrigger: {
-        trigger: ".header",
-        scrub: true,
-      },
-      x: 0,
-      y: 0,
-      z: -45,
-    }
-  );
 
   gsap.fromTo(
     camera.position,
@@ -1514,7 +1209,6 @@ const gsapScroll = () => {
           pixelatedPass.setPixelSize(Math.min(window.devicePixelRatio, 2));
           currentPixelSize = Math.min(window.devicePixelRatio, 2);
 
-          if (textProject) textProject.visible = true;
           if (dancingSphere) {
             gsap.fromTo(
               uniforms.u_opacity,
@@ -1526,7 +1220,6 @@ const gsapScroll = () => {
                   trigger: ".team-start",
                   scrub: 0,
                   start: "top top",
-                  // endTrigger: ".team",
                   end: "30% top",
                   onEnterBack: () => {
                     dancingSphere.visible = true;
@@ -1565,6 +1258,9 @@ const gsapScroll = () => {
             );
           }
         },
+        onEnterBack: () => {
+          if (textProject) textProject.visible = false;
+        },
       },
     }
   );
@@ -1599,12 +1295,15 @@ const gsapScroll = () => {
         scrub: 0,
         start: "top top",
         end: "80% top",
+        onEnter: () => {
+          if (textProject) textProject.visible = true;
+        },
         onLeave: () => {
-          resetPixelation();
           if (textFeatured) {
             textFeatured.material.opacity = 1; // Reset to default
             textFeatured.visible = false;
           }
+          resetPixelation();
         },
         onEnterBack: () => {
           if (!effectComposer.passes.includes(pixelatedPass)) {
@@ -1633,7 +1332,7 @@ const gsapScroll = () => {
         trigger: ".project",
         start: "top top",
         end: "bottom top",
-        onEnter: (self) => {
+        onLeave: (self) => {
           if (textProject) textProject.visible = false;
           // if (scene) scene.background = new Color("#001633");
         },
@@ -1798,53 +1497,6 @@ const gsapScroll = () => {
       },
     }
   );
-
-  // APPEAR THE JACK SHIP
-  // gsap.to(
-  //   {},
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".conclusion-rotation",
-  //       start: "center top",
-  //       end: "bottom top",
-  //       onEnter: () => {
-  //         if (jackShip) jackShip.visible = true;
-  //       },
-  //       onLeaveBack: () => {
-  //         if (jackShip) jackShip.visible = false;
-  //       },
-  //     },
-  //   }
-  // );
-
-  // let contact = document.querySelector(".contact__final");
-  // // SHOW CONTACT SECTION
-  // gsap.to(
-  //   {},
-  //   {
-  //     scrollTrigger: {
-  //       trigger: ".contact__final",
-  //       start: "top center",
-  //       end: "top top",
-  //       scrub: 0,
-  //       onUpdate: (self) => {
-  //         contact.style.opacity = self.progress;
-  //       },
-  //     },
-  //   }
-  // );
 };
-
-// OPTION DROPPED [WILL NOT BE USED]
-// const addWormHall = () => {
-//   var cameraRotationProxyX = 3.14159;
-//   var cameraRotationProxyY = 0;
-
-//   // GETTING POSITIONS FOR POINTS
-//   const geometry = new TubeGeometry(spline, 64, 1.8, 16, false);
-//   const tubeVertex = geometry.attributes.position;
-
-//   const pointGeometry = new BufferGeometry();
-// };
 
 export default Three;
